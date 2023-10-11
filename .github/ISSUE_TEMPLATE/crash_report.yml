@@ -40,6 +40,19 @@ body:
     validations:
       required: true
   
+  - type: dropdown
+    id: products
+    attributes:
+      label: Product(s)
+      multiple: true
+      description: |
+        What products does this issue apply to?
+      options:
+        - FiveM
+        - RedM
+        - FXServer
+        - FxDK
+  
   - type: input
     id: build-number
     attributes:
