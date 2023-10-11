@@ -1,6 +1,6 @@
 name: Crash Report
 description: "File a crash report to FiveM, RedM, or FXServer, result is simple: you crashed"
-labels: ["💀 crash", "triage"]
+labels: ["crash", "triage"]
 assignees:
   - 
 
