@@ -1,5 +1,5 @@
 name: Feature Request
-description: Need the mono v2-runtime to support something?
+description: Need FiveM, RedM, or FXServer to support something?
 labels: ["enhancement", "triage"]
 assignees:
   - 
@@ -9,7 +9,7 @@ body:
     attributes:
       value: |
         Thank you for taking the time to fill out this feature request.
-        Only feature request are accepted, so please refrain yourself from submitting any other requests, including support requests.
+        Only feature requests are accepted, so please refrain yourself from submitting any other requests, including support requests.
         
         \* Requests that fail to deliver the proper information may be closed without any feedback.
   
@@ -33,9 +33,9 @@ body:
         - Unknown
         - Nice extra
         - Quality of Life (QoL)
-        - Overal quality to the runtime
+        - Overal quality to the platform
         - Prerequisite for my project
-        - Fatal (we can't use the runtime without)
+        - Fatal (we can't use the platform without)
   
   - type: textarea
     id: implementation

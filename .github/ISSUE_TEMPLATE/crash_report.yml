@@ -1,5 +1,5 @@
 name: Crash Report
-description: "File a crash report to the mono v2-runtime, result is simple: you crashed"
+description: "File a crash report to FiveM, RedM, or FXServer, result is simple: you crashed"
 labels: ["💀 crash", "triage"]
 assignees:
   - 
@@ -11,7 +11,7 @@ body:
         Thank you for taking the time to fill out this crash report.
         Only crash related issues are accepted, so please refrain yourself from submitting any other requests, including support requests.
         
-        For issues, like exceptions, that don't crash the client or runtime use the [Bug Report](https://github.com/thorium-cfx/mono_v2_get_started/issues/new?assignees=&labels=bug%2Ctriage&projects=&template=bug_report.yml) template.
+        For issues, like exceptions, that don't crash the client or runtime use the [Bug Report](https://github.com/thorium-cfx/fivem-templates/issues/new?assignees=&labels=bug%2Ctriage&projects=&template=bug_report.yml) template.
         
         \* Issue reports that fail to deliver the proper information may be closed without any feedback.
   
