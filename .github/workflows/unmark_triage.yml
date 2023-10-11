@@ -5,6 +5,7 @@ on:
       - closed
 
 jobs:
+  label_issues:
   - uses: actions/github-script@v6
     with:
       script: |
