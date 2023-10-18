@@ -21,6 +21,8 @@ jobs:
             const contextOwner = context.repo.owner;
             const contextRepo = context.repo.repo;
             
+            console.log(process.env.ISSUE_TITLE);
+            
             if (process.env.ISSUE_TITLE.length < 10)
             {
               github.rest.issues.update({
