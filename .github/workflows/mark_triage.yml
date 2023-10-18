@@ -16,15 +16,11 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
-          script: |            
-            const issueNumber = context.issue.number;
-            const contextOwner = context.repo.owner;
-            const contextRepo = context.repo.repo;
-            
+          script: |
             const issue = {
-                issue_number: issueNumber,
-                owner: contextOwner,
-                repo: contextRepo
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
             };
             
             // Is the title long enough to convey any useful meaning?
@@ -36,9 +32,7 @@ jobs:
               });
               
               github.rest.issues.update({
-                issue_number: issueNumber,
-                owner: contextOwner,
-                repo: contextRepo,
+                ...issue,
                 state: "closed",
                 state_reason: "not_planned"
               });
@@ -68,9 +62,7 @@ jobs:
                 }
                 
                 github.rest.issues.addLabels({
-                  issue_number: issueNumber,
-                  owner: contextOwner,
-                  repo: contextRepo,
+                  ...issue,
                   labels: addLabels
                 });
               }
