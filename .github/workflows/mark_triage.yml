@@ -28,7 +28,7 @@ jobs:
                 issue_number: issueNumber,
                 owner: contextOwner,
                 repo: contextRepo,
-                "Closing this issue, the title is too short to convey any real meaning, please create another issue with an explanatory title.",
+                "Closing this issue, the title is too short to convey any real meaning, please create another issue with an explanatory title."
               });
               
               github.rest.issues.update({
