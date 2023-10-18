@@ -15,4 +15,5 @@ jobs:
       issues: write
     steps:
       - uses: actions/github-script@v6
-        with: issue_opened.js
+        with:
+          script: require(issue_opened.js)
