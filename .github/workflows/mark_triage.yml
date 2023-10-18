@@ -16,18 +16,22 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
-          script: |
+          script: |            
             const issueNumber = context.issue.number;
             const contextOwner = context.repo.owner;
             const contextRepo = context.repo.repo;
+            
+            const issue = {
+                issue_number: issueNumber,
+                owner: contextOwner,
+                repo: contextRepo,
+            };
             
             // Is the title long enough to convey any useful meaning?
             if (process.env.ISSUE_TITLE.length < 10)
             {
               github.rest.issues.createComment({
-                issue_number: issueNumber,
-                owner: contextOwner,
-                repo: contextRepo,
+                ...issue
                 "Closing this issue, the title is too short to convey any real meaning, please create another issue with an explanatory title."
               });
               
