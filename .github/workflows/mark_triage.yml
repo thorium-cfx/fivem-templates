@@ -24,7 +24,7 @@ jobs:
             const issue = {
                 issue_number: issueNumber,
                 owner: contextOwner,
-                repo: contextRepo,
+                repo: contextRepo
             };
             
             // Is the title long enough to convey any useful meaning?
