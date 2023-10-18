@@ -25,12 +25,14 @@ jobs:
             
             if (process.env.ISSUE_TITLE.length < 10)
             {
-              github.rest.issues.update({
+              console.log("close it!");
+              console.log(github.rest.issues.update({
                 issue_number: issueNumber,
                 owner: contextOwner,
                 repo: contextRepo,
-                state: "not_planned"
-              });
+                state: "closed"
+                state_reason: "not_planned"
+              }));
             }
             
             var addLabels = ["triage"];
