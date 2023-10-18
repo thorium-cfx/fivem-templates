@@ -23,7 +23,7 @@ jobs:
             
             if (process.env.ISSUE_TITLE.length < 10)
             {
-              octokit.rest.issues.update({
+              github.rest.issues.update({
                 issue_number: issueNumber,
                 owner: contextOwner,
                 repo: contextRepo,
