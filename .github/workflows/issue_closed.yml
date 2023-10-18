@@ -24,5 +24,9 @@ jobs:
             }
             catch (exception)
             {
-                console.log(exception);
+                // we don't care if the label wasn't present, as long as it's gone now
+                if (exception.status !== 404)
+                {
+                    console.log(exception);
+                }
             }
