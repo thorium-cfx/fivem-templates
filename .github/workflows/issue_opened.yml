@@ -16,4 +16,4 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
-          script: require(issue_opened.js)
+          script: require("issue_opened.js");
