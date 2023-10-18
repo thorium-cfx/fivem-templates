@@ -16,21 +16,26 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
+            var addLabels = ["triage"];
             
+            const issueBody = process.env.ISSUE_BODY;
             
-            const productsStringRegex = /### Product\(s\)\s*([\w,\h]*)/;
-            var productsString = productsStringRegex.exec(process.env.ISSUE_BODY);
+            const productsStringRegex = /### Product\(s\)\s*([\w, ]*)/;            
+            var productsString = productsStringRegex.exec(issueBody);
+            var products = productsString[1].split(/[ ,]+/);
+                        
+            for (var i = 0; i < products.length; ++i)
+            {
+              const product = products[i];
+              switch (product)
+              {
+                case "FxDK": addLabels.push("sdk"); break;
+              }
+            }
             
-            console.log(productsString);
-            
-            const productsArrayRegex = /(\w+)[,\s]?/g;
-            console.log(productsArrayRegex.exec(productsString));
-            
-            console.log(process.env.ISSUE_BODY);
-          
             github.rest.issues.addLabels({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["triage"]
+              labels: addLabels
             })
