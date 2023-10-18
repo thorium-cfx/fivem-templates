@@ -13,9 +13,16 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            github.rest.issues.removeLabel({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: ["triage"]
-            })
+            try
+            {
+                github.rest.issues.removeLabel({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: ["triage"]
+                });
+            }
+            catch (exception)
+            {
+                console.log(exception);
+            }
