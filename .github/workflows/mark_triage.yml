@@ -6,6 +6,7 @@ on:
       - opened
 env:
   ISSUE_BODY: ${{ github.event.issue.body }}
+  ISSUE_TITLE: ${{ github.event.issue.title }}
 
 jobs:
   label_issues:
@@ -16,26 +17,43 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
+            const issueNumber = context.issue.number;
+            const contextOwner = context.repo.owner;
+            const contextRepo = context.repo.repo;
+            
+            if (process.env.ISSUE_TITLE.length < 10)
+            {
+              octokit.rest.issues.update({
+                issue_number: issueNumber,
+                owner: contextOwner,
+                repo: contextRepo,
+                state: "not_planned"
+              });
+            }
+            
             var addLabels = ["triage"];
             
             const issueBody = process.env.ISSUE_BODY;
             
             const productsStringRegex = /### Product\(s\)\s*([\w, ]*)/;            
             var productsString = productsStringRegex.exec(issueBody);
-            var products = productsString[1].split(/[ ,]+/);
-                        
-            for (var i = 0; i < products.length; ++i)
+            if (productsString)
             {
-              const product = products[i];
-              switch (product)
+              var products = productsString[1].split(/[ ,]+/);              
+              for (var i = 0; i < products.length; ++i)
               {
-                case "FxDK": addLabels.push("sdk"); break;
+                const product = products[i];
+                switch (product)
+                {
+                  case "FxDK": addLabels.push("sdk"); break;
+                }
               }
+              
+              github.rest.issues.addLabels({
+                issue_number: issueNumber,
+                owner: contextOwner,
+                repo: contextRepo,
+                labels: addLabels
+              });
+              
             }
-            
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: addLabels
-            })
