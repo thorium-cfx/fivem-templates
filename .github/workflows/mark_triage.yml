@@ -4,6 +4,9 @@ on:
     types:
       - reopened
       - opened
+env:
+  ISSUE_BODY: ${{ github.event.issue.body }}
+
 jobs:
   label_issues:
     runs-on: ubuntu-latest
@@ -16,14 +19,14 @@ jobs:
             
             
             const productsStringRegex = /### Product\(s\)\s*([\w,\h]*)/;
-            var productsString = productsStringRegex.exec(github.event.issue.body);
+            var productsString = productsStringRegex.exec(process.env.ISSUE_BODY);
             
             console.log(productsString);
             
             const productsArrayRegex = /(\w+)[,\s]?/g;
             console.log(productsArrayRegex.exec(productsString));
             
-            console.log(github.event.issue.body);
+            console.log(process.env.ISSUE_BODY);
           
             github.rest.issues.addLabels({
               issue_number: context.issue.number,
