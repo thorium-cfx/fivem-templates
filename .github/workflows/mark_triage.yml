@@ -31,7 +31,7 @@ jobs:
             if (process.env.ISSUE_TITLE.length < 10)
             {
               github.rest.issues.createComment({
-                ...issue
+                ...issue,
                 "Closing this issue, the title is too short to convey any real meaning, please create another issue with an explanatory title."
               });
               
