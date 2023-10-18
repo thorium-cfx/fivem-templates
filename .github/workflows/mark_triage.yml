@@ -16,7 +16,7 @@ jobs:
             
             
             const productsStringRegex = /### Product\(s\)\s*([\w,\h]*)/;
-            var productsString = productsRegex.exec(github.event.issue.body);
+            var productsString = productsStringRegex.exec(github.event.issue.body);
             
             console.log(productsString);
             
