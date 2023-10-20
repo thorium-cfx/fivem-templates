@@ -11,7 +11,7 @@ body:
         Thank you for taking the time to fill out this bug report.
         Only bug related issues are accepted, so please refrain yourself from submitting any other requests, including support requests.
         
-        For crashes that terminate the client or server use the [Crash Report](https://github.com/thorium-cfx/fivem-templates/issues/new?assignees=&labels=💀+crash%2Ctriage&projects=&template=crash_report.yml) template.
+        For crashes that terminate the client or server use the [Crash Report](./new?assignees=&labels=💀+crash%2Ctriage&projects=&template=crash_report.yml) template.
         
         \* Issue reports that fail to deliver the proper information may be closed without any feedback.
   
@@ -30,7 +30,7 @@ body:
     attributes:
       label: Expected result
       description: |
-        What did you expect to happen instead?
+        What should've happened instead?
     validations:
       required: true
   
@@ -58,7 +58,8 @@ body:
         - Unknown
         - Slight inconvenience
         - There's a workaround
-        - This needs to be addressed (fast)
+        - Security issue
+        - 
     validations:
       required: true
   
@@ -74,6 +75,8 @@ body:
         - RedM
         - FXServer
         - FxDK
+    validations:
+      required: true
   
   - type: input
     id: build-number
@@ -81,6 +84,8 @@ body:
       label: Specific version
       description: Please fill in the build number on which this issue occured
       placeholder: FiveM/RedM 6464, Server 6464 windows/linux
+    validations:
+      required: true
   
   - type: textarea
     id: misc
