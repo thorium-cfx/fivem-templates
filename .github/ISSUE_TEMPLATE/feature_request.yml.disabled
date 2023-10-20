@@ -58,10 +58,12 @@ body:
         - RedM
         - FXServer
         - FxDK
+    validations:
+      required: true
   
   - type: textarea
     id: misc
     attributes:
-      label: Extra
+      label: Additional information
       description: |
         Anything else you'd like to add?
