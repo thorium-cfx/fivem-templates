@@ -1,5 +1,9 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Public Documentation (docs.fivem.net)
+    url: https://github.com/citizenfx/fivem-docs
+    about: All https://docs.fivem.net/docs/ requests should go here https://github.com/citizenfx/fivem-docs
+    
   - name: FiveM native documentation
     url: https://github.com/citizenfx/natives
     about: Please go here for FiveM game native issues
