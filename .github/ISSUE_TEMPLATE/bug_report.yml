@@ -81,9 +81,9 @@ body:
   - type: input
     id: build-number
     attributes:
-      label: Specific version
-      description: Please fill in the build number on which this issue occured
-      placeholder: FiveM/RedM 6464, Server 6464 windows/linux
+      label: Specific version(s)
+      description: Please fill in the build numbers of the products this issue occured on
+      placeholder: FiveM/RedM 6464, Server 6402 windows/linux
     validations:
       required: true
   
