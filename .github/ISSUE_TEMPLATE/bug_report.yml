@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report to FiveM, RedM, or FXServer, excluding crashes
+description: File a bug report to FiveM, RedM, FXServer, or FxDK, excluding crashes
 labels: ["bug", "triage"]
 assignees:
   - 
@@ -45,7 +45,6 @@ body:
         2. 
         3. 
         4. 
-      render: bash
     validations:
       required: true
   
@@ -58,9 +57,8 @@ body:
       options:
         - Unknown
         - Slight inconvenience
-        - Prerequisite for my project
-        - Can't use this feature until fixed
-        - Fatal (we can't use the platform without)
+        - There's a workaround
+        - This needs to be addressed (fast)
     validations:
       required: true
   
