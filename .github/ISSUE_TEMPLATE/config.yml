@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: FiveM native documentation
+    url: https://github.com/citizenfx/natives
+    about: Please go here for FiveM game native issues
+    
+  - name: RedM native documentation
+    url: https://github.com/citizenfx/natives_rdr3
+    about: Please go here for RedM game native issues
