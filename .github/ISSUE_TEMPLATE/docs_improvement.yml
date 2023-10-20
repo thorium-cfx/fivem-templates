@@ -11,6 +11,8 @@ body:
         Thank you for taking the time to fill out this documentation improvement request.
         Only documentation related request are accepted, so please refrain yourself from submitting any other requests, including support requests.
         
+        Any documentation found on https://docs.fivem.net/docs/ should be requested here, but on that specific repository instead.
+        
         \* Requests that fail to deliver the proper information may be closed without any feedback.
   
   - type: input
@@ -59,6 +61,8 @@ body:
         - RedM
         - FXServer
         - FxDK
+    validations:
+      required: true
   
   - type: textarea
     id: misc
