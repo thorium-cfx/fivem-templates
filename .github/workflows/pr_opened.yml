@@ -15,7 +15,7 @@ jobs:
       - name: Check commit titles
         run: |
           # get commits json and make an array of commit messages
-          readarray -t commitMessages < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
+          readarray -t commitMessages < <(curl -ks "$COMMITS_URL" | jq '.[].commit.message' )
           
           # first " character may exist due to how jq passes values
           commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .{10,}$"
@@ -23,10 +23,8 @@ jobs:
           
           for (( i=0; i < ${#commitMessages[@]}; i++ )); do
             message=${commitMessages[$i]}
-            if [[ "$message" =~ $commitTitleRegex ]]; then
-              echo "  valid '$message'"
-            else
-              echo "::error::invalid '$message'"
+            if [[ ! "$message" =~ $commitTitleRegex ]]; then
+              echo "::error::Invalid title: '$message'"
               valid=false
             fi
           done
