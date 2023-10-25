@@ -4,7 +4,7 @@ on:
     types: [ reopened, opened, edited, synchronize ]
 
 jobs:
-  example-job:
+  Validate commit titles:
     runs-on: ubuntu-latest
     env:
       COMMITS_URL: ${{ github.event.pull_request.commits_url }}
@@ -36,7 +36,8 @@ jobs:
       - name: Inform the user of bad titles
         if: failure()
         uses: actions/github-script@v6
-        pull_requests: write
+        permissions:
+          pull_requests: write
         with:
           script: |
             github.rest.issues.createComment({
