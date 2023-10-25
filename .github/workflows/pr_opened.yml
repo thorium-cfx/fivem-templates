@@ -26,14 +26,14 @@ jobs:
             if [[ "$message" =~ $commitTitleRegex ]]; then
               echo "  valid '$message'"
             else
-              echo "invalid '$message'"
+              echo "::error::invalid '$message'"
               valid=false
             fi
           done
           
           if [[ $valid = false ]]; then
             echo "bad!"
-            echo "::error Something went bad"
+            echo "::error::Something went bad"
             exit 1
           fi
       
