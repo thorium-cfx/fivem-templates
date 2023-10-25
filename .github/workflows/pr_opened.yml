@@ -12,8 +12,8 @@ jobs:
     steps:
       - run: |
           commits=$(curl "$COMMITS_URL")
-          echo "$commits"
-          commits=fromJson($commits)
+          #echo "$commits"
+          commits=${{fromJson($commits)}}
           echo "$commits"
           
           git clone $PR_REF --no-checkout
