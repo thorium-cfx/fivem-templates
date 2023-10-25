@@ -16,7 +16,8 @@ jobs:
           readarray -t commitTitles < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
           #printf '%s\n' "${arr[@]}"
           
-          commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
+          # first " character may exist due to how jq passes values
+          commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .{10,}$"
           valid=true
           
           for (( i=0; i < ${#commitTitles[@]}; i++ )); do
