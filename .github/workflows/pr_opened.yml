@@ -9,18 +9,18 @@ jobs:
     steps:
       - run: |
         commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
-        valid=true
+        valid=1
         
         while read line; do
             if [[ "$line" =~ $commitTitleRegex ]]; then
                 echo "  valid '$line'"
             else
                 echo "invalid '$line'"
-                valid=false
+                valid=0
             fi
         done <<< $(git log main.. --pretty="%s")
         
-        if [[ $valid =~ false ]]; then
+        if [[ $valid = 0 ]]; then
             echo "bad!"
             exit 1
         fi
