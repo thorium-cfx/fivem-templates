@@ -8,8 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PR_REF: ${{ github.event.pull_request.head.sha }}
+      COMMIT_NAMES: ${{ github.event.commits[0].message }}
     steps:
       - run: |
+          echo "$COMMIT_NAMES"
           git clone $PR_REF --no-checkout
           
           commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
