@@ -33,6 +33,7 @@ jobs:
           
           if [[ $valid = false ]]; then
             echo "bad!"
+            echo "::error Something went bad"
             exit 1
           fi
       
