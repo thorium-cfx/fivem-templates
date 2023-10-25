@@ -1,0 +1,26 @@
+name: Validate PR
+on:
+  pull_request:
+    types: [ reopened, opened, edited, synchronize ]
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
+        valid=true
+        
+        while read line; do
+            if [[ "$line" =~ $commitTitleRegex ]]; then
+                echo "  valid '$line'"
+            else
+                echo "invalid '$line'"
+                valid=false
+            fi
+        done <<< $(git log main.. --pretty="%s")
+        
+        if [[ $valid =~ false ]]; then
+            echo "bad!"
+            exit 1
+        fi
