@@ -6,8 +6,12 @@ on:
 jobs:
   example-job:
     runs-on: ubuntu-latest
+    env:
+      PR_REF: ${{ github.event.pull_request.head.sha }}
     steps:
       - run: |
+          git clone $PR_REF --no-checkout
+          
           commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
           valid=true
           
@@ -24,10 +28,3 @@ jobs:
             echo "bad!"
             exit 1
           fi
-  one:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
