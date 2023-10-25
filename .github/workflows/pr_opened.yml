@@ -13,8 +13,10 @@ jobs:
       - run: |
           commits=$(curl "$COMMITS_URL")
           #echo "$commits"
-          commits=$(jq "$commits")
-          echo "$commits"
+          readarray arr < <(jq '.[].commit.message' "$commits")
+          printf '%s\n' "${arr[@]}"
+          
+          exit 0
           
           git clone $PR_REF --no-checkout
           
