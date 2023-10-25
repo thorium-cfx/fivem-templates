@@ -13,10 +13,10 @@ jobs:
       - run: |
           #commits=$(curl "$COMMITS_URL")
           #echo "$commits"
-          readarray -t commitTitles < <(curl -k "$COMMITS_URL" | jq -r '.[].commit.message' )
+          readarray -t commitTitles < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
           #printf '%s\n' "${arr[@]}"
           
-          commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
+          commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
           valid=true
           
           for (( i=0; i < ${#commitTitles[@]}; i++ )); do
