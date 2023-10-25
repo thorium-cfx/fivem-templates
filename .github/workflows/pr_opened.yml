@@ -30,8 +30,7 @@ jobs:
           done
           
           if [[ $valid = false ]]; then
-            echo "bad!"
-            echo "::error::Something went bad"
+            echo "::error::One or more of your commit titles do not conform to our title rules"
             exit 1
           fi
       
@@ -44,5 +43,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "One or more of your commit titles does not conform to our title rules, make sure they all follow the following pattern: type(component): description. Allowed types are: fix, tweak, or feat and description must at least be 10 characters long to convey any meaning."
+              body: "One or more of your commit titles do not conform to our title rules, make sure they all follow the following pattern: `type(component): description`. Allowed types are: `fix`, `tweak`, or `feat` and description must at least be 10 characters long to convey any meaning."
             });
