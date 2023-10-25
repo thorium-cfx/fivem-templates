@@ -7,7 +7,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  Validate commit titles:
+  Validate_commit_titles:
     runs-on: ubuntu-latest
     env:
       COMMITS_URL: ${{ github.event.pull_request.commits_url }}
