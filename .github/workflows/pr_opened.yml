@@ -13,24 +13,21 @@ jobs:
       - run: |
           #commits=$(curl "$COMMITS_URL")
           #echo "$commits"
-          readarray -t arr < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
-          printf '%s\n' "${arr[@]}"
-          
-          exit 0
-          
-          git clone $PR_REF --no-checkout
+          readarray -t commitTitles < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
+          #printf '%s\n' "${arr[@]}"
           
           commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .+$"
           valid=true
           
-          while read line; do
-            if [[ "$line" =~ $commitTitleRegex ]]; then
-              echo "  valid '$line'"
+          for (( i=0; i < ${#commitTitles[@]}; i++ )); do
+            message=${commitTitles[$i]}
+            if [[ "$message" =~ $commitTitleRegex ]]; then
+              echo "  valid '$message'"
             else
-              echo "invalid '$line'"
+              echo "invalid '$message'"
               valid=false
             fi
-          done <<< $(git log main.. --pretty="%s")
+          done
         
           if [[ $valid = false ]]; then
             echo "bad!"
