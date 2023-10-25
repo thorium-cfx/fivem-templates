@@ -7,21 +7,19 @@ jobs:
   example-job:
     runs-on: ubuntu-latest
     env:
-      PR_REF: ${{ github.event.pull_request.head.sha }}
       COMMITS_URL: ${{ github.event.pull_request.commits_url }}
     steps:
-      - run: |
-          #commits=$(curl "$COMMITS_URL")
-          #echo "$commits"
-          readarray -t commitTitles < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
-          #printf '%s\n' "${arr[@]}"
+      - name: Check commit titles
+        run: |
+          # get commits json and make an array of commit messages
+          readarray -t commitMessages < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
           
           # first " character may exist due to how jq passes values
           commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9/-]+\): .{10,}$"
           valid=true
           
-          for (( i=0; i < ${#commitTitles[@]}; i++ )); do
-            message=${commitTitles[$i]}
+          for (( i=0; i < ${#commitMessages[@]}; i++ )); do
+            message=${commitMessages[$i]}
             if [[ "$message" =~ $commitTitleRegex ]]; then
               echo "  valid '$message'"
             else
@@ -29,8 +27,19 @@ jobs:
               valid=false
             fi
           done
-        
+          
           if [[ $valid = false ]]; then
             echo "bad!"
             exit 1
           fi
+      
+      - name: Inform the user of bad titles
+        if: failure()
+        uses: actions/github-script@v6
+        run: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "One or more of your commit titles does not conform to our title rules, make sure they all follow the following pattern: type(component): description. Allowed types are: fix, tweak, or feat and description must at least be 10 characters long to convey any meaning."
+          });
