@@ -4,7 +4,7 @@ on:
     types: [ reopened, opened, edited, synchronize ]
 
 permissions:
-  pull_requests: write
+  pull-requests: write
 
 jobs:
   Validate commit titles:
