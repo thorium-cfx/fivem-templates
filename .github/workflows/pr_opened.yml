@@ -13,7 +13,7 @@ jobs:
       - run: |
           commits=$(curl "$COMMITS_URL")
           #echo "$commits"
-          commits=${{fromJson($commits)}}
+          commits=$(jq $commits)
           echo "$commits"
           
           git clone $PR_REF --no-checkout
