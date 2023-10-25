@@ -11,9 +11,9 @@ jobs:
       COMMITS_URL: ${{ github.event.pull_request.commits_url }}
     steps:
       - run: |
-          commits=$(curl "$COMMITS_URL")
+          #commits=$(curl "$COMMITS_URL")
           #echo "$commits"
-          readarray arr < <(jq '.[].commit.message' "$commits")
+          readarray -t arr < <(curl -k "$COMMITS_URL" | jq '.[].commit.message' )
           printf '%s\n' "${arr[@]}"
           
           exit 0
