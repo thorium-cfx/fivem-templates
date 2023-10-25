@@ -36,10 +36,11 @@ jobs:
       - name: Inform the user of bad titles
         if: failure()
         uses: actions/github-script@v6
-        run: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: "One or more of your commit titles does not conform to our title rules, make sure they all follow the following pattern: type(component): description. Allowed types are: fix, tweak, or feat and description must at least be 10 characters long to convey any meaning."
-          });
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "One or more of your commit titles does not conform to our title rules, make sure they all follow the following pattern: type(component): description. Allowed types are: fix, tweak, or feat and description must at least be 10 characters long to convey any meaning."
+            });
