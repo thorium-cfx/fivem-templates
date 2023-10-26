@@ -37,7 +37,7 @@ jobs:
           fi
       
       - name: Inform the user of bad titles
-        if: failure()
+        if: failure() && false
         uses: actions/github-script@v6
         with:
           script: |
