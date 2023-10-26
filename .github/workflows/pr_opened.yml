@@ -60,14 +60,46 @@ jobs:
           fi
       
       - name: Inform the user of bad titles
-        if: failure() && false
+        if: failure()
         uses: actions/github-script@v6
         with:
           script: |
-            return
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "One or more of your commit titles do not conform to our title rules, make sure they all follow the following pattern: `type(component): description`. Allowed types are: `fix`, `tweak`, or `feat` and description must at least be 10 characters long to convey any meaning."
+            const issue = {
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+            };
+            
+            /*github.rest.issues.createComment({
+                ...issue,
+                body: "One or more of your commit titles do not conform to our title rules, make sure they all follow the following pattern: `type(component): description`. Allowed types are: `fix`, `tweak`, or `feat` and description must at least be 10 characters long to convey any meaning."
+            });*/
+            
+            // invalid label
+            github.rest.issues.addLabels({
+                ...issue,
+                labels: ["invalid"]
             });
+            
+            // close it
+            github.rest.issues.update({
+                ...issue,
+                state: "closed"
+            });
+            
+            // remove triage
+            try
+            {
+                await github.rest.issues.removeLabel({
+                    ...issue,
+                    name: ["triage"]
+                });
+            }
+            catch (exception)
+            {
+                // we don't care if the label wasn't present, as long as it's gone now
+                if (exception.status !== 404)
+                {
+                    console.log(exception);
+                }
+            }
