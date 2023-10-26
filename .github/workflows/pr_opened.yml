@@ -25,12 +25,16 @@ jobs:
             message=${commitMessages[$i]}
             if [[ ! "$message" =~ $commitTitleRegex ]]; then
               echo "::error::Invalid title: '$message'"
+              echo "* Invalid title: '$message'" >> $GITHUB_STEP_SUMMARY
               valid=false
             fi
           done
           
           if [[ $valid = false ]]; then
             echo "::error::One or more of your commit titles do not conform to our title rules"
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "One or more of your commit titles do not conform to our title rules" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
       
@@ -39,6 +43,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            return
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
