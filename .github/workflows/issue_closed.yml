@@ -1,9 +1,10 @@
 name: Remove triage
 on:
   issues:
-    types:
-      - closed
-      - deleted
+    types: [ closed, deleted ]
+  pull_request:
+    types: [ closed, deleted ]
+
 jobs:
   label_issues:
     runs-on: ubuntu-latest
