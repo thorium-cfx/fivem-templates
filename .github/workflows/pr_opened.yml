@@ -24,7 +24,7 @@ jobs:
           for (( i=0; i < ${#commitMessages[@]}; i++ )); do
             # remove first and last " (quotes) and get title from message (ends at the first '\n' or the end of the string)
             title=${commitMessages[$i]:1:-1}
-            title=${title%%\\n}
+            title=${title%%\\n*}
             
             if [[ "$title" =~ $commitTitleRegex ]]; then
               echo "         valid title: $title"
