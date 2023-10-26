@@ -17,16 +17,19 @@ jobs:
           # get commits json and make an array of commit messages
           readarray -t commitMessages < <(curl -ks "$COMMITS_URL" | jq '.[].commit.message' )
           
-          # first " character may exist due to how jq passes values
           # requires at least 10 characters in description
-          commitTitleRegex="^\"?(tweak|fix|feat)\([a-zA-Z0-9\/-]+\): [^\\n\n]{10,}"
+          commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9\/-]+\): .{10,}"
           valid=true
           
           for (( i=0; i < ${#commitMessages[@]}; i++ )); do
-            message=${commitMessages[$i]}
-            if [[ ! "$message" =~ $commitTitleRegex ]]; then
-              # print up to the first new line character '\n'
-              echo "::error::Invalid title: ${message%%\\r\\n\r\n*}"
+            # remove first and last " (quotes) and get title from message (ends at the first '\n' or the end of the string)
+            title=${commitMessages[$i]:1:-1}
+            title=${title%%\\n}
+            
+            if [[ "$title" =~ $commitTitleRegex ]]; then
+              echo "         valid title: $title"
+            else
+              echo "::error::Invalid title: $title"
               valid=false
             fi
           done
