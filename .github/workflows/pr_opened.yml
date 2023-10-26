@@ -81,12 +81,6 @@ jobs:
                 labels: ["invalid"]
             });
             
-            // close it
-            github.rest.issues.update({
-                ...issue,
-                state: "closed"
-            });
-            
             // remove triage
             try
             {
