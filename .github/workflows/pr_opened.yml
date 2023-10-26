@@ -59,7 +59,7 @@ jobs:
             exit 1
           fi
       
-      - name: Inform the user of bad titles
+      - name: Mark PR as invalid
         if: failure()
         uses: actions/github-script@v6
         with:
@@ -87,6 +87,40 @@ jobs:
                 await github.rest.issues.removeLabel({
                     ...issue,
                     name: ["triage"]
+                });
+            }
+            catch (exception)
+            {
+                // we don't care if the label wasn't present, as long as it's gone now
+                if (exception.status !== 404)
+                {
+                    console.log(exception);
+                }
+            }
+        
+      - name: Mark PR as valid
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = {
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+            };
+            
+            // triage label
+            github.rest.issues.addLabels({
+                ...issue,
+                labels: ["triage"]
+            });
+            
+            // remove invalid
+            try
+            {
+                await github.rest.issues.removeLabel({
+                    ...issue,
+                    name: ["invalid"]
                 });
             }
             catch (exception)
