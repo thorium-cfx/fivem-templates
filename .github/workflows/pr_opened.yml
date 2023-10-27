@@ -1,0 +1,460 @@
+name: Validate PR
+on:
+  pull_request:
+    types: [ reopened, opened, edited, synchronize, ready_for_review ]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  input_validation:
+    name: Validate PR details
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    env:
+      COMMITS_URL: ${{ github.event.pull_request.commits_url }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_DESCR: ${{ github.event.pull_request.body }}
+    steps:
+      - name: Check PR details
+        run: |
+          valid=true
+          
+          if [[ ${#PR_TITLE} -lt 10 ]]; then
+            echo "::error::PR title is too small to convey any real meaning."
+            valid=false
+          fi
+          
+          if [[ ${#PR_DESCR} -lt 10 ]]; then
+            echo "::error::PR body is too small to convey any real meaning."
+            valid=false
+          fi
+          
+          if [[ $valid = false ]]; then
+            exit 1
+          fi
+      
+      - name: Check commit titles
+        run: |
+          # get commits json and make an array of commit messages
+          readarray -t commitMessages < <(curl -ks "$COMMITS_URL" | jq '.[].commit.message' )
+          
+          # requires at least 10 characters in description
+          commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9\/-]+\): .{10,}"
+          valid=true
+          
+          for (( i=0; i < ${#commitMessages[@]}; i++ )); do
+            # remove first and last " (quotes) and get title from message (ends at the first '\n' or the end of the string)
+            title=${commitMessages[$i]:1:-1}
+            title=${title%%\\n*}
+            
+            if [[ "$title" =~ $commitTitleRegex ]]; then
+              echo "         valid title: $title"
+            else
+              echo "::error::Invalid title: $title"
+              valid=false
+            fi
+          done
+          
+          if [[ $valid = false ]]; then
+            echo "::error::One or more of your commit titles do not conform to our title rules"
+            exit 1
+          fi
+  
+  build_windows_fivem:
+    name: Build / FiveM
+    runs-on: windows-latest
+    needs: input_validation
+    steps:
+      - name: Build
+        run: |
+          set PROGRAM=five
+          
+          :: D is too small, C is big enough
+          mkdir C:\fivem
+          cd /d C:\fivem
+          
+          :: use python 3.11, as 3.12 doesn't seem to support module jinja2
+          :: set PY_PYTHON3=3.11
+          :: set PY_PYTHON=%PY_PYTHON3%
+          :: setx PY_PYTHON3 %PY_PYTHON3%
+          :: setx PY_PYTHON %PY_PYTHON%
+          :: py -3 -m pip install setuptools
+          
+          py -3 -m pip install jinja2 ply
+          
+          :: dependencies
+          mkdir dep
+          
+          :: download boost
+          cd dep
+          curl -s -L https://boostorg.jfrog.io/artifactory/main/release/1.71.0/source/boost_1_71_0.7z -o boost.7z
+          7z -bso0 x boost.7z -oboost
+          del boost.7z
+          set BOOST_ROOT=%cd%\boost\boost_1_71_0
+          cd ../
+          
+          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git %PROGRAM% -c core.symlinks=true
+          cd %PROGRAM%
+          set REPO_ROOT=%cd%
+          
+          git submodule update --jobs=16 --init --depth=1
+          call fxd get-chrome
+          call prebuild.cmd
+          
+          call fxd gen -game %PROGRAM%
+          
+          cd code\build\%PROGRAM%\
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MsBuild.exe" -t:build -restore -p:RestorePackagesConfig=true -p:preferredtoolarchitecture=x64 -p:configuration=release -v:q -m CitizenMP.sln
+        shell: cmd
+  
+  build_windows_redm:
+    name: Build / RedM
+    if: false
+    runs-on: windows-latest
+    needs: input_validation
+    steps:
+      - name: Build
+        run: |
+          set PROGRAM=rdr3
+          
+          :: D is too small, C is big enough
+          mkdir C:\fivem
+          cd /d C:\fivem
+          
+          :: use python 3.11, as 3.12 doesn't seem to support module jinja2
+          set PY_PYTHON3=3.11
+          set PY_PYTHON=%PY_PYTHON3%
+          setx PY_PYTHON3 %PY_PYTHON3%
+          setx PY_PYTHON %PY_PYTHON%
+          
+          py -3 -m pip install jinja2 ply
+          
+          :: dependencies
+          mkdir dep
+          
+          :: download boost
+          cd dep
+          curl -s -L https://boostorg.jfrog.io/artifactory/main/release/1.71.0/source/boost_1_71_0.7z -o boost.7z
+          7z -bso0 x boost.7z -oboost
+          del boost.7z
+          set BOOST_ROOT=%cd%\boost\boost_1_71_0
+          cd ../
+          
+          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git %PROGRAM% -c core.symlinks=true
+          cd %PROGRAM%
+          set REPO_ROOT=%cd%
+          
+          git submodule update --jobs=16 --init --depth=1
+          call fxd get-chrome
+          call prebuild.cmd
+          
+          call fxd gen -game %PROGRAM%
+          
+          cd code\build\%PROGRAM%\
+          ::"%REPO_ROOT%\code\tools\ci\nuget.exe" restore CitizenMP.sln
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MsBuild.exe" -t:build -restore -p:RestorePackagesConfig=true -p:preferredtoolarchitecture=x64 -p:configuration=release -v:q -m CitizenMP.sln
+        shell: cmd
+        
+  build_windows_server:
+    name: Build / Server (Windows)
+    if: false
+    runs-on: windows-latest
+    needs: input_validation
+    steps:
+      - name: Build
+        run: |
+          set PROGRAM=server
+          
+          :: D is too small, C is big enough
+          mkdir C:\fivem
+          cd /d C:\fivem
+          
+          :: use python 3.11, as 3.12 doesn't seem to support module jinja2
+          set PY_PYTHON3=3.11
+          set PY_PYTHON=%PY_PYTHON3%
+          setx PY_PYTHON3 %PY_PYTHON3%
+          setx PY_PYTHON %PY_PYTHON%
+          
+          py -3 -m pip install jinja2 ply
+          
+          :: dependencies
+          mkdir dep
+          
+          :: download boost
+          cd dep
+          curl -s -L https://boostorg.jfrog.io/artifactory/main/release/1.71.0/source/boost_1_71_0.7z -o boost.7z
+          7z -bso0 x boost.7z -oboost
+          del boost.7z
+          set BOOST_ROOT=%cd%\boost\boost_1_71_0
+          cd ../
+          
+          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git %PROGRAM% -c core.symlinks=true
+          cd %PROGRAM%
+          set REPO_ROOT=%cd%
+          
+          git submodule update --jobs=16 --init --depth=1
+          call fxd get-chrome
+          call prebuild.cmd
+          
+          call fxd gen -game %PROGRAM%
+          
+          cd code\build\%PROGRAM%\windows
+          ::"%REPO_ROOT%\code\tools\ci\nuget.exe" restore CitizenMP.sln
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MsBuild.exe" -t:build -restore -p:RestorePackagesConfig=true -p:preferredtoolarchitecture=x64 -p:configuration=release -v:q -m CitizenMP.sln
+        shell: cmd
+    
+  build_linux_server:
+    name: Build / Server (Linux)
+    runs-on: ubuntu-latest
+    needs: input_validation
+    steps:
+      - name: Build
+        run: |
+          # install runtime dependencies
+          # sudo apt-get install libssl1.1 libcrypto1.1 libunwind libstdc++ zlib c-ares v8~=9.3 musl-dbg libatomic
+          sudo apt-get install libstdc++6 gcc-multilib
+          
+          # install compile-time dependencies
+          # sudo apt-get install .dev-deps lld~=13 curl-dev=7.72.0-r99 clang-dev~=13 clang~=13 build-base linux-headers openssl1.1-compat-dev openssl-dev~=1.1 python3 py3-pip py3-virtualenv lua5.3 lua5.3-dev mono-reference-assemblies=5.16.1.0-r9991 mono-dev=5.16.1.0-r9991 libmono=5.16.1.0-r9991 mono-corlib=5.16.1.0-r9991 mono=5.16.1.0-r9991 mono-reference-assemblies-4.x=5.16.1.0-r9991 mono-reference-assemblies-facades=5.16.1.0-r9991 mono-csc=5.16.1.0-r9991 mono-runtime=5.16.1.0-r9991 c-ares-dev v8-dev~=9.3 clang-libs~=13 git dotnet6-sdk
+          sudo apt-get -y install lua5.3 lua5.3-dev libclang-dev
+          
+          sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
+          
+          # install python deps
+          python3 -m venv /tmp/py-venv
+          . /tmp/py-venv/bin/activate
+          
+          pip install ply six Jinja2 MarkupSafe
+          
+          # npm i libclang
+          
+          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git ~/fivem -c core.symlinks=true
+          cd ~/fivem
+          git submodule update --jobs=16 --init --depth=1
+          
+          # build natives
+          if [ "$SKIP_NATIVES" == "" ]; then
+            cd ~/fivem/ext/natives
+            gcc -O2 -shared -fpic -o cfx.so -I/usr/include/lua5.3/ lua_cfx.c
+            
+            mkdir -p inp out
+            curl --http1.1 -sLo inp/natives_global.lua http://runtime.fivem.net/doc/natives.lua
+            
+            cd ~/fivem/ext/native-doc-gen
+            
+            ROOT=$(pwd)
+            LUA53=lua5.3
+            NODE=node            
+            YARN="$NODE $ROOT/yarn_cli.js"
+            
+            # install yarn deps
+            cd $ROOT/../native-doc-tooling/
+            
+            echo yarn
+            $YARN global add node-gyp@9.3.1
+            $YARN
+            
+            cd $ROOT/../natives/
+            
+            NATIVES_MD_DIR=$ROOT/../native-decls/native_md/ $LUA53 codegen.lua inp/natives_global.lua markdown server rpc
+            
+            # make out dir
+            cd $ROOT
+            mkdir out || true
+            
+            # enter out dir
+            cd out
+            
+            echo build
+            whereis libclang.so
+            whereis libclang.so.1
+            
+            # exit 0
+            
+            # setup clang and build
+            $NODE $ROOT/../native-doc-tooling/index.js $ROOT/../native-decls/
+            
+            mkdir -p $ROOT/../natives/inp/ || true
+            
+            echo build2
+            NODE_PATH=$ROOT/../native-doc-tooling/node_modules/ $NODE $ROOT/../native-doc-tooling/build-template.js lua CFX > $ROOT/../natives/inp/natives_cfx_new.lua
+            rm $PWD/libclang.dll || true
+            
+            # copy outputs
+            cd $ROOT
+            cp -a out/natives_test.json natives_cfx.json
+            
+            # copy new
+            if [ -e $ROOT/../natives/inp/natives_cfx.lua ]; then
+                if ! diff -q $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua 2>&1 > /dev/null; then
+                    cp -a $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua
+                fi
+            else
+                cp -a $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua
+            fi
+            
+            
+            cd ~/fivem/ext/natives
+            
+            mkdir -p ~/natives/cfx-server/citizen/scripting/lua/
+            mkdir -p ~/natives/cfx-server/citizen/scripting/v8/
+            
+            lua5.3 codegen.lua inp/natives_global.lua native_lua server > ~/fivem/code/components/citizen-scripting-lua/include/NativesServer.h
+            lua5.3 codegen.lua inp/natives_global.lua lua server > ~/natives/cfx-server/citizen/scripting/lua/natives_server.lua
+            lua5.3 codegen.lua inp/natives_global.lua js server > ~/natives/cfx-server/citizen/scripting/v8/natives_server.js
+            lua5.3 codegen.lua inp/natives_global.lua dts server > ~/natives/cfx-server/citizen/scripting/v8/natives_server.d.ts
+            
+            cat > ~/fivem/code/client/clrcore/NativesServer.cs << EOF
+          #if IS_FXSERVER
+          using ContextType = CitizenFX.Core.fxScriptContext;
+          
+          namespace CitizenFX.Core.Native
+          {
+          EOF
+              
+            lua5.3 codegen.lua inp/natives_global.lua enum server >> ~/fivem/code/client/clrcore/NativesServer.cs
+            lua5.3 codegen.lua inp/natives_global.lua cs server >> ~/fivem/code/client/clrcore/NativesServer.cs
+              
+            cat >> ~/fivem/code/client/clrcore/NativesServer.cs << EOF
+          }
+          #endif
+          EOF
+          
+            lua5.3 codegen.lua inp/natives_global.lua cs_v2 server > ~/fivem/code/client/clrcore-v2/Native/NativesServer.cs
+            
+            lua5.3 codegen.lua inp/natives_global.lua rpc server > ~/natives/cfx-server/citizen/scripting/rpc_natives.json
+          fi
+            
+          # download and extract boost
+          cd /tmp
+            
+          # keeping this here as a note that boost is really dumb for using "jfrog artifactory bintray" which gives constant persistent 'Forbidden!'
+          # whenever some arbitrary quota runs out, and deletes their version history on sourceforge, and has no single canonical git repo
+          #curl --http1.1 -sLo /tmp/boost.tar.bz2 https://dl.bintray.com/boostorg/release/1.71.0/source/boost_1_71_0.tar.bz2
+          curl --http1.1 -sLo /tmp/boost.tar.bz2 https://runtime.fivem.net/client/deps/boost_1_71_0.tar.bz2
+          
+          tar xf boost.tar.bz2
+          rm boost.tar.bz2
+          
+          mv boost_* boost || true
+          
+          export BOOST_ROOT=/tmp/boost/
+          
+          # download and build premake
+          curl --http1.1 -sLo /tmp/premake.zip https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-src.zip
+          
+          cd /tmp
+          unzip -q premake.zip
+          rm premake.zip
+          cd premake-*
+          
+          cd build/gmake*.unix/
+          make -j${JOB_SLOTS}
+          cd ../../
+          
+          mv bin/release/premake5 /usr/local/bin
+          cd ..
+          
+          rm -rf premake-*
+          
+          ## SETUP-CUTOFF
+          
+          # build CitizenFX
+          cd ~/fivem/code
+          
+          premake5 gmake2 --game=server --cc=clang --dotnet=msnet
+          cd build/server/linux
+          
+          export CFLAGS="-fno-plt"
+          export CXXFLAGS="-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR -Wno-deprecated-declarations -Wno-invalid-offsetof -fno-plt"
+          export LDFLAGS="-Wl,--build-id -fuse-ld=lld"
+          
+          if [ ! -z "$CI_BRANCH" ] && [ ! -z "$CI_BUILD_NUMBER" ]; then
+            echo '#pragma once' > ~/fivem/code/shared/cfx_version.h
+            echo '#define GIT_DESCRIPTION "'$CI_BRANCH' '$CI_BUILD_NUMBER' linux"' >> ~/fivem/code/shared/cfx_version.h
+            echo '#define GIT_TAG "'$CI_BUILD_NUMBER'"' >> ~/fivem/code/shared/cfx_version.h
+          fi
+          
+          make clean
+          make clean config=release
+          make -j${JOB_SLOTS} config=release
+  
+  post_build:
+    name: Post Build PR actions
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [ build_windows_fivem, build_windows_redm, build_windows_server, build_linux_server ]
+    steps:
+      - name: Mark PR as valid
+        if: ${{ !contains(needs.*.result, 'failure') }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = {
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+            };
+            
+            // triage label
+            github.rest.issues.addLabels({
+                ...issue,
+                labels: ["triage"]
+            });
+            
+            // remove invalid
+            try
+            {
+                await github.rest.issues.removeLabel({
+                    ...issue,
+                    name: ["invalid"]
+                });
+            }
+            catch (exception)
+            {
+                // we don't care if the label wasn't present, as long as it's gone now
+                if (exception.status !== 404)
+                {
+                    console.log(exception);
+                }
+            }
+      
+      - name: Mark PR as invalid
+        if: ${{ contains(needs.*.result, 'failure') }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = {
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+            };
+            
+            /*github.rest.issues.createComment({
+                ...issue,
+                body: "One or more of your commit titles do not conform to our title rules, make sure they all follow the following pattern: `type(component): description`. Allowed types are: `fix`, `tweak`, or `feat` and description must at least be 10 characters long to convey any meaning."
+            });*/
+            
+            // invalid label
+            github.rest.issues.addLabels({
+                ...issue,
+                labels: ["invalid"]
+            });
+            
+            // remove triage
+            try
+            {
+                await github.rest.issues.removeLabel({
+                    ...issue,
+                    name: ["triage"]
+                });
+            }
+            catch (exception)
+            {
+                // we don't care if the label wasn't present, as long as it's gone now
+                if (exception.status !== 404)
+                {
+                    console.log(exception);
+                }
+            }
