@@ -215,13 +215,13 @@ jobs:
           
           # install compile-time dependencies
           sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev \
-            libcurl4-openssl-dev libssl-dev libv8-dev libc-ares-dev \
+            libcurl4-openssl-dev libssl-dev libv8-dev libc-ares-dev libclang-dev \
             python3-venv make clang lld dotnet-sdk-6.0 \
             build-essential unzip 
           
           
           # symlinks
-          sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
+          #sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
           #sudo ln -s /lib/x86_64-linux-gnu/libcurl.so /lib/libcurl.so
           
           # install python deps
