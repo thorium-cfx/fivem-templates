@@ -214,18 +214,22 @@ jobs:
           JOB_SLOTS=16
           
           # install compile-time dependencies
-          sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev libclang-dev dotnet-sdk-6.0
+          sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev /
+            libcurl4-openssl-dev libssl-dev libv8-dev libc-ares-dev /
+            python3-venv make clang lld dotnet-sdk-6.0 /
+            build-essential unzip 
           
+          
+          # symlinks
           sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
+          #sudo ln -s /lib/x86_64-linux-gnu/libcurl.so /lib/libcurl.so
           
           # install python deps
           python3 -m venv /tmp/py-venv
           . /tmp/py-venv/bin/activate
           
           pip install ply six Jinja2 MarkupSafe
-          
-          # npm i libclang
-          
+                    
           git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git ~/fivem -c core.symlinks=true
           cd ~/fivem
           git submodule update --jobs=${JOB_SLOTS} --init --depth=1
