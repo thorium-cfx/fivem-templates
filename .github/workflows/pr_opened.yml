@@ -214,9 +214,9 @@ jobs:
           JOB_SLOTS=16
           
           # install compile-time dependencies
-          sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev /
-            libcurl4-openssl-dev libssl-dev libv8-dev libc-ares-dev /
-            python3-venv make clang lld dotnet-sdk-6.0 /
+          sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev \
+            libcurl4-openssl-dev libssl-dev libv8-dev libc-ares-dev \
+            python3-venv make clang lld dotnet-sdk-6.0 \
             build-essential unzip 
           
           
