@@ -206,7 +206,7 @@ jobs:
     
   build_linux_server:
     name: Build / Server (Linux)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: input_validation
     steps:
       - name: Build
