@@ -222,8 +222,8 @@ jobs:
           
           # symlinks
           #sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
-          #sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-10.so /usr/lib/x86_64-linux-gnu/libclang.so
-          #sudo ln -s /lib/x86_64-linux-gnu/libcurl.so /lib/libcurl.so
+          sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-10.so /usr/lib/x86_64-linux-gnu/libclang.so
+          sudo ln -s /usr/lib/x86_64-linux-gnu/libcurl.so /usr/lib/libcurl.so
           
           # install python deps
           python3 -m venv /tmp/py-venv
