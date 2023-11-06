@@ -15,7 +15,7 @@
 	url = https://github.com/google/protobuf.git
 [submodule "vendor/breakpad"]
 	path = vendor/breakpad
-	url = https://github.com/citizenfx/breakpad.git
+	url = https://github.com/thorium-cfx/breakpad.git
 [submodule "vendor/udis86"]
 	path = vendor/udis86
 	url = https://github.com/citizenfx/udis86.git
