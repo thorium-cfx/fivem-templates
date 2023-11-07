@@ -12,7 +12,8 @@ return {
 			'CPPGC_CAGED_HEAP',
 		}
 
-		if os.istarget('windows') then
+		--if os.istarget('windows') then
+		if true then
 			includedirs { "../vendor/v8/" .. baseVersion .. "/include/" }
 			libdirs { "../vendor/v8/" .. baseVersion .. "/lib/" }
 			
