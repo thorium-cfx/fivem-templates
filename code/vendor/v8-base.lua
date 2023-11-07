@@ -12,13 +12,13 @@ return {
 			'CPPGC_CAGED_HEAP',
 		}
 
-		--if os.istarget('windows') then
-		if true then
+		if os.istarget('windows') then
 			includedirs { "../vendor/v8/" .. baseVersion .. "/include/" }
 			libdirs { "../vendor/v8/" .. baseVersion .. "/lib/" }
 			
 			links { ('v8-%s.dll.lib'):format(version) }
 		else
+			includedirs { "../vendor/v8/" .. baseVersion .. "/include/" }
 			links { 'v8', 'v8_libplatform' }
 		end
 	end,
