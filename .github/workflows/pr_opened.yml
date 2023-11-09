@@ -74,7 +74,7 @@ jobs:
     uses: ./.github/workflows/ci_build_windows.yml
     with:
       program: ${{ matrix.builds[1] }}
-      os: hi
+      os: windows
       
   build_linux_server:
     name: Build / Server (Linux)
