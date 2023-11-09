@@ -67,9 +67,9 @@ jobs:
         title: [ FiveM, RedM, Server ]
         product: [ five, rdr3, server ]
     uses: ./.github/workflows/ci/build_windows.yml
-      with:
-        title: ${{ matrix.title }}
-        product: ${{ matrix.product }}
+    with:
+      title: ${{ matrix.title }}
+      product: ${{ matrix.product }}
       
   build_linux_server:
     name: Build / Server (Linux)
