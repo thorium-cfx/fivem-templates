@@ -6,7 +6,7 @@ on:
       program:
         required: true
         type: string
-      os:
+      platform:
         required: true
         type: string
 
