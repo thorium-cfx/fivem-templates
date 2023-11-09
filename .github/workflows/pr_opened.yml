@@ -248,7 +248,7 @@ jobs:
     name: Post Build PR actions
     if: always()
     runs-on: ubuntu-latest
-    needs: [ build_windows_fivem, build_windows_redm, build_windows_server, build_linux_server ]
+    needs: [ build_windows, build_linux_server ]
     steps:
       - name: Mark PR as valid
         if: ${{ !contains(needs.*.result, 'failure') }}
