@@ -95,6 +95,8 @@ jobs:
           
           mkdir -p "$ROOT" && cd "$_" || exit 1
           
+          echo git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git $PROGRAM -c core.symlinks=true
+          echo $PWD
           git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git $PROGRAM -c core.symlinks=true
           git submodule update --jobs=$JOB_SLOTS --init --depth=1
         shell: bash
