@@ -65,10 +65,10 @@ jobs:
     strategy:
       matrix:
         builds: [
-            [ FiveM,  five,   windows ],
-            [ RedM,   rdr3,   windows ],
-            [ Server, server, windows ],
-            [ Server, server, linux ]
+            [ FiveM,  five,   Windows ],
+            [ RedM,   rdr3,   Windows ],
+            [ Server, server, Windows ],
+            [ Server, server, Linux ]
           ]
     name: Build / ${{ matrix.builds[0] }}
     needs: input_validation

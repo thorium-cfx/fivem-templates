@@ -5,21 +5,28 @@ on:
     inputs:
       program:
         required: true
-        type: string
+        type: choice
+        options:
+        - five
+        - rdr3
+        - server
       os:
         required: true
-        type: string
+        type: choice
+        options:
+        - Windows
+        - Linux
 
 env:
   PROGRAM: ${{ inputs.program }}
 
 jobs:
   build_windows:
-    name: ${{ inputs.platform == 'windows' && 'Windows' || 'Linux' }}
-    runs-on: ${{ inputs.platform == 'windows' && 'windows-latest' || 'ubuntu-20.04' }}
+    name: ${{ inputs.platform }}
+    runs-on: ${{ inputs.platform == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
     steps:
       - name: Windows
-        if: ${{ inputs.platform == 'windows' }}
+        if: ${{ inputs.platform == 'Windows' }}
         run: |
           :: D is too small, C is big enough
           mkdir C:\b
@@ -53,7 +60,7 @@ jobs:
         shell: cmd
         
       - name: Linux
-        if: ${{ inputs.platform == 'linux' }}
+        if: ${{ inputs.platform == 'Linux' }}
         run: |
           #JOB_SLOTS=16
           JOB_SLOTS=$(nproc --all); JOB_SLOTS=$(( JOB_SLOTS * 2 ))
