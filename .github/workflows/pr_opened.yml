@@ -93,11 +93,9 @@ jobs:
           ROOT_DEP="$ROOT/dep"
           JOB_SLOTS=$(nproc --all); JOB_SLOTS=$((JOB_SLOTS * 2))
           
-          mkdir -p "$ROOT" && cd "$_" || exit 1
+          mkdir -p "$ROOT_REPO" && cd "$_" || exit 1
           
-          echo $PROGRAM
-          echo $PWD
-          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git $PROGRAM -c core.symlinks=true
+          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git . -c core.symlinks=true
           git submodule update --jobs=$JOB_SLOTS --init --depth=1
         shell: bash
         
