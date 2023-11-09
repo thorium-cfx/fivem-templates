@@ -89,9 +89,9 @@ jobs:
         run: |
           # Windows: D is too small, C is big enough
           [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="~/b"
-          ROOT_REPO="$ROOT/$PROGRAM"
-          ROOT_DEP="$ROOT/dep"
-          JOB_SLOTS=$(nproc --all); JOB_SLOTS=$((JOB_SLOTS * 2))
+          export ROOT_REPO="$ROOT/$PROGRAM"
+          export ROOT_DEP="$ROOT/dep"
+          export JOB_SLOTS=$(nproc --all); JOB_SLOTS=$((JOB_SLOTS * 2))
           
           mkdir -p "$ROOT_REPO" && cd "$_" || exit 1
           
@@ -117,7 +117,7 @@ jobs:
           
           BUILD_SCRIPT="./.github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.bat || echo linux.sh)"
           
-          chmod +x $BUILD_SCRIPT          
+          chmod +x $BUILD_SCRIPT
           $BUILD_SCRIPT "$ROOT_DEP" $JOB_SLOTS
         shell: bash
   
