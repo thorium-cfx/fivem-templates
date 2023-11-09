@@ -1,7 +1,13 @@
 name: Validate PR
 on:
   pull_request:
-    types: [ reopened, opened, edited, synchronize, ready_for_review ]
+    types: [ reopened, opened, edited, synchronize, ready_for_review ]  push:
+    paths:
+      - '!.github/**'
+      - '!ext/**'
+      - '!code/tools/**'
+      - '!*.cmd'
+      - '!*.ps1'
 
 permissions:
   pull-requests: write
