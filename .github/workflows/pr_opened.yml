@@ -67,7 +67,7 @@ jobs:
         builds: [
             [ FiveM,  five,   windows ],
             [ RedM,   rdr3,   windows ],
-            [ Server, server, windows ]
+            [ Server, server, windows ],
             [ Server, server, linux ]
           ]
     name: Build / ${{ matrix.builds[0] }}
