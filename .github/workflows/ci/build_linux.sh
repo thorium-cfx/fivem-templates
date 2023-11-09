@@ -44,7 +44,7 @@ cd $ROOT_NATIVE_GEN/../natives/
 NATIVES_MD_DIR=$ROOT_NATIVE_GEN/../native-decls/native_md/ $LUA53 codegen.lua inp/natives_global.lua markdown server rpc
 
 # make out dir
-cd $ROOT
+cd $ROOT_NATIVE_GEN
 mkdir -p out && cd "$_"
 
 # setup clang and build
@@ -57,7 +57,7 @@ NODE_PATH=$ROOT_NATIVE_GEN/../native-doc-tooling/node_modules/ $NODE $ROOT_NATIV
 rm $PWD/libclang.dll || true
 
 # copy outputs
-cd $ROOT
+cd $ROOT_NATIVE_GEN
 cp -a out/natives_test.json natives_cfx.json
 
 # copy new
