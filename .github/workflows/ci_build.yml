@@ -5,17 +5,10 @@ on:
     inputs:
       program:
         required: true
-        type: choice
-        options:
-        - five
-        - rdr3
-        - server
+        type: string
       os:
         required: true
-        type: choice
-        options:
-        - Windows
-        - Linux
+        type: string
 
 env:
   PROGRAM: ${{ inputs.program }}
