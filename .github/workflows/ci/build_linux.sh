@@ -1,5 +1,6 @@
 #JOB_SLOTS=16
-JOB_SLOTS=$(nproc --all); JOB_SLOTS=$(( JOB_SLOTS * 2 ))
+ROOT_DEP=${1:-/tmp}
+JOB_SLOTS=${2:-16}
 
 # install compile-time dependencies
 sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev \
@@ -7,21 +8,14 @@ sudo apt-get -y install libstdc++6 gcc-multilib lua5.3 lua5.3-dev \
 	python3-venv make clang lld dotnet-sdk-6.0 \
 	build-essential unzip 
 
-
 # symlinks
 #sudo ln -s /lib/x86_64-linux-gnu/libclang-15.so.15 /lib/x86_64-linux-gnu/libclang.so
 sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-10.so /usr/lib/x86_64-linux-gnu/libclang.so
 sudo ln -s /usr/lib/x86_64-linux-gnu/libcurl.so /usr/lib/libcurl.so
 
 # install python deps
-python3 -m venv /tmp/py-venv
-. /tmp/py-venv/bin/activate
-
-pip install ply six Jinja2 MarkupSafe
-		
-git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git ~/fivem -c core.symlinks=true
-cd ~/fivem
-git submodule update --jobs=${JOB_SLOTS} --init --depth=1
+python3 -m venv $ROOT_DEP/py-venv
+. $ROOT_DEP/py-venv/bin/activate
 
 # build natives
 cd ~/fivem/ext/natives
@@ -54,12 +48,6 @@ mkdir out || true
 
 # enter out dir
 cd out
-
-echo build
-whereis libclang.so
-whereis libclang.so.1
-
-# exit 0
 
 # setup clang and build
 $NODE $ROOT/../native-doc-tooling/index.js $ROOT/../native-decls/
@@ -116,20 +104,8 @@ lua5.3 codegen.lua inp/natives_global.lua rpc server > ~/natives/cfx-server/citi
 
 # done with natives
 
-
-# download and extract boost
-cd /tmp
-curl --http1.1 -sLo /tmp/boost.tar.bz2 https://runtime.fivem.net/client/deps/boost_1_71_0.tar.bz2
-
-tar xf boost.tar.bz2
-rm boost.tar.bz2
-
-mv boost_* boost || true
-
-export BOOST_ROOT=/tmp/boost/
-
 # download and build premake
-curl --http1.1 -sLo /tmp/premake.zip https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-src.zip
+curl --http1.1 -sLo $ROOT_DEP/premake.zip https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-src.zip
 
 cd /tmp
 unzip -q premake.zip
