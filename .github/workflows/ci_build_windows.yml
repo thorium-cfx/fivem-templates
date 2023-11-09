@@ -3,6 +3,9 @@ name: Build windows product
 on:
   workflow_call:
     inputs:
+      title:
+        required: true
+        type: string
       program:
         required: true
         type: string
@@ -12,6 +15,7 @@ env:
 
 jobs:
   build_windows:
+    name: ${{ inputs.title }}
     runs-on: windows-latest
     steps:
       - name: Build

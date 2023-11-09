@@ -73,6 +73,7 @@ jobs:
     needs: input_validation
     uses: ./.github/workflows/ci_build_windows.yml
     with:
+      title: ${{ matrix.builds[0] }}
       program: ${{ matrix.builds[1] }}
       
   build_linux_server:
