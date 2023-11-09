@@ -1,31 +1,27 @@
  name: Validate PR
 on:
-  pull_request:
-    types: [ reopened, opened, edited, synchronize, ready_for_review ]
+  workflow_call:
+    inputs:
+      title:
+        required: true
+        type: string
+      program:
+        required: true
+        type: string
 
-permissions:
-  pull-requests: write
+env:
+  PRODUCT: ${{ inputs.program }}
 
 jobs:
-  build_windows_fivem:
-    name: Build / FiveM
+  build_windows:
+    name: Build / ${{ inputs.title }}
     runs-on: windows-latest
-    needs: input_validation
     steps:
       - name: Build
         run: |
-          set PROGRAM=five
-          
           :: D is too small, C is big enough
-          mkdir C:\fivem
-          cd /d C:\fivem
-          
-          :: use python 3.11, as 3.12 doesn't seem to support module jinja2
-          :: set PY_PYTHON3=3.11
-          :: set PY_PYTHON=%PY_PYTHON3%
-          :: setx PY_PYTHON3 %PY_PYTHON3%
-          :: setx PY_PYTHON %PY_PYTHON%
-          :: py -3 -m pip install setuptools
+          mkdir C:\b
+          cd /d C:\b
           
           py -3 -m pip install jinja2 ply
           
@@ -40,16 +36,16 @@ jobs:
           set BOOST_ROOT=%cd%\boost\boost_1_71_0
           cd ../
           
-          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git %PROGRAM% -c core.symlinks=true
-          cd %PROGRAM%
+          git clone --depth=1 --quiet --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git %PRODUCT% -c core.symlinks=true
+          cd %PRODUCT%
           set REPO_ROOT=%cd%
           
           git submodule update --jobs=16 --init --depth=1
           call fxd get-chrome
           call prebuild.cmd
           
-          call fxd gen -game %PROGRAM%
+          call fxd gen -game %PRODUCT%
           
-          cd code\build\%PROGRAM%\
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MsBuild.exe" CitizenMP.sln -p:RestorePackagesConfig=true -p:preferredtoolarchitecture=x64 -p:configuration=release -maxcpucount:4 -v:q
+          cd code\build\%PRODUCT%\
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MsBuild.exe" CitizenMP.sln -t:build -restore -p:RestorePackagesConfig=true -p:preferredtoolarchitecture=x64 -p:configuration=release -maxcpucount:4 -v:q
         shell: cmd
