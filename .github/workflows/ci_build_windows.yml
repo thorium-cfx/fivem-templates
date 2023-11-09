@@ -9,13 +9,17 @@ on:
       program:
         required: true
         type: string
+      os:
+        required: true
+        type: string
 
 env:
   PROGRAM: ${{ inputs.program }}
 
 jobs:
   build_windows:
-    name: ${{ inputs.title }}
+    name: Windows
+    if: ${{ inputs.os == "windows" }}
     runs-on: windows-latest
     steps:
       - name: Build
