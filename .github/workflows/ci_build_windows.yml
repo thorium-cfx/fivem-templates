@@ -16,10 +16,10 @@ env:
 jobs:
   build_windows:
     name: Windows
-    runs-on: ${{ inputs.os == 'windows' && 'windows-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.platform == 'windows' && 'windows-latest' || 'ubuntu-20.04' }}
     steps:
       - name: Build
-        if: ${{ inputs.os == 'windows' }}
+        if: ${{ inputs.platform == 'windows' }}
         run: |
           :: D is too small, C is big enough
           mkdir C:\b
@@ -53,5 +53,5 @@ jobs:
         shell: cmd
         
       - name: Build2
-        if: ${{ inputs.os == 'linux' }}
+        if: ${{ inputs.platform == 'linux' }}
         run: echo hi

@@ -72,10 +72,10 @@ jobs:
           ]
     name: Build / ${{ matrix.builds[0] }}
     needs: input_validation
-    uses: ./.github/workflows/ci_build_windows.yml
+    uses: ./.github/workflows/ci_build.yml
     with:
       program: ${{ matrix.builds[1] }}
-      os: ${{ matrix.builds[2] }}
+      platform: ${{ matrix.builds[2] }}
   
   post_build:
     name: Post Build PR actions
