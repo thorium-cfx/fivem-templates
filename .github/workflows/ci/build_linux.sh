@@ -1,4 +1,5 @@
 #JOB_SLOTS=16
+ROOT_REPO=$(pwd)
 ROOT_DEP=${1:-/tmp}
 JOB_SLOTS=${2:-16}
 
@@ -18,44 +19,41 @@ python3 -m venv $ROOT_DEP/py-venv
 . $ROOT_DEP/py-venv/bin/activate
 
 # build natives
-cd ~/fivem/ext/natives
+cd $ROOT_REPO/ext/natives
 gcc -O2 -shared -fpic -o cfx.so -I/usr/include/lua5.3/ lua_cfx.c
 
 mkdir -p inp out
 curl --http1.1 -sLo inp/natives_global.lua http://runtime.fivem.net/doc/natives.lua
 
-cd ~/fivem/ext/native-doc-gen
+cd $ROOT_REPO/ext/native-doc-gen
 
-ROOT=$(pwd)
+ROOT_NATIVE_GEN=$(pwd)
 LUA53=lua5.3
 NODE=node            
-YARN="$NODE $ROOT/yarn_cli.js"
+YARN="$NODE $ROOT_NATIVE_GEN/yarn_cli.js"
 
 # install yarn deps
-cd $ROOT/../native-doc-tooling/
+cd $ROOT_NATIVE_GEN/../native-doc-tooling/
 
 echo yarn
 $YARN global add node-gyp@9.3.1
 $YARN
 
-cd $ROOT/../natives/
+cd $ROOT_NATIVE_GEN/../natives/
 
-NATIVES_MD_DIR=$ROOT/../native-decls/native_md/ $LUA53 codegen.lua inp/natives_global.lua markdown server rpc
+NATIVES_MD_DIR=$ROOT_NATIVE_GEN/../native-decls/native_md/ $LUA53 codegen.lua inp/natives_global.lua markdown server rpc
 
 # make out dir
 cd $ROOT
-mkdir out || true
-
-# enter out dir
-cd out
+mkdir -p out && cd "$_"
 
 # setup clang and build
-$NODE $ROOT/../native-doc-tooling/index.js $ROOT/../native-decls/
+$NODE $ROOT_NATIVE_GEN/../native-doc-tooling/index.js $ROOT_NATIVE_GEN/../native-decls/
 
-mkdir -p $ROOT/../natives/inp/ || true
+mkdir -p $ROOT_NATIVE_GEN/../natives/inp/ || true
 
 echo build2
-NODE_PATH=$ROOT/../native-doc-tooling/node_modules/ $NODE $ROOT/../native-doc-tooling/build-template.js lua CFX > $ROOT/../natives/inp/natives_cfx_new.lua
+NODE_PATH=$ROOT_NATIVE_GEN/../native-doc-tooling/node_modules/ $NODE $ROOT_NATIVE_GEN/../native-doc-tooling/build-template.js lua CFX > $ROOT_NATIVE_GEN/../natives/inp/natives_cfx_new.lua
 rm $PWD/libclang.dll || true
 
 # copy outputs
@@ -63,26 +61,26 @@ cd $ROOT
 cp -a out/natives_test.json natives_cfx.json
 
 # copy new
-if [ -e $ROOT/../natives/inp/natives_cfx.lua ]; then
-	if ! diff -q $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua 2>&1 > /dev/null; then
-		cp -a $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua
+if [ -e $ROOT_NATIVE_GEN/../natives/inp/natives_cfx.lua ]; then
+	if ! diff -q $ROOT_NATIVE_GEN/../natives/inp/natives_cfx_new.lua $ROOT_NATIVE_GEN/../natives/inp/natives_cfx.lua 2>&1 > /dev/null; then
+		cp -a $ROOT_NATIVE_GEN/../natives/inp/natives_cfx_new.lua $ROOT_NATIVE_GEN/../natives/inp/natives_cfx.lua
 	fi
 else
-	cp -a $ROOT/../natives/inp/natives_cfx_new.lua $ROOT/../natives/inp/natives_cfx.lua
+	cp -a $ROOT_NATIVE_GEN/../natives/inp/natives_cfx_new.lua $ROOT_NATIVE_GEN/../natives/inp/natives_cfx.lua
 fi
 
 
-cd ~/fivem/ext/natives
+cd $ROOT_REPO/ext/natives
 
 mkdir -p ~/natives/cfx-server/citizen/scripting/lua/
 mkdir -p ~/natives/cfx-server/citizen/scripting/v8/
 
-lua5.3 codegen.lua inp/natives_global.lua native_lua server > ~/fivem/code/components/citizen-scripting-lua/include/NativesServer.h
+lua5.3 codegen.lua inp/natives_global.lua native_lua server > $ROOT_REPO/code/components/citizen-scripting-lua/include/NativesServer.h
 lua5.3 codegen.lua inp/natives_global.lua lua server > ~/natives/cfx-server/citizen/scripting/lua/natives_server.lua
 lua5.3 codegen.lua inp/natives_global.lua js server > ~/natives/cfx-server/citizen/scripting/v8/natives_server.js
 lua5.3 codegen.lua inp/natives_global.lua dts server > ~/natives/cfx-server/citizen/scripting/v8/natives_server.d.ts
 
-cat > ~/fivem/code/client/clrcore/NativesServer.cs << EOF
+cat > $ROOT_REPO/code/client/clrcore/NativesServer.cs << EOF
 #if IS_FXSERVER
 using ContextType = CitizenFX.Core.fxScriptContext;
 
@@ -90,15 +88,15 @@ namespace CitizenFX.Core.Native
 {
 EOF
   
-lua5.3 codegen.lua inp/natives_global.lua enum server >> ~/fivem/code/client/clrcore/NativesServer.cs
-lua5.3 codegen.lua inp/natives_global.lua cs server >> ~/fivem/code/client/clrcore/NativesServer.cs
+lua5.3 codegen.lua inp/natives_global.lua enum server >> $ROOT_REPO/code/client/clrcore/NativesServer.cs
+lua5.3 codegen.lua inp/natives_global.lua cs server >> $ROOT_REPO/code/client/clrcore/NativesServer.cs
   
-cat >> ~/fivem/code/client/clrcore/NativesServer.cs << EOF
+cat >> $ROOT_REPO/code/client/clrcore/NativesServer.cs << EOF
 }
 #endif
 EOF
 
-lua5.3 codegen.lua inp/natives_global.lua cs_v2 server > ~/fivem/code/client/clrcore-v2/Native/NativesServer.cs
+lua5.3 codegen.lua inp/natives_global.lua cs_v2 server > $ROOT_REPO/code/client/clrcore-v2/Native/NativesServer.cs
 
 lua5.3 codegen.lua inp/natives_global.lua rpc server > ~/natives/cfx-server/citizen/scripting/rpc_natives.json
 
@@ -124,7 +122,7 @@ rm -rf premake-*
 ## SETUP-CUTOFF
 
 # build CitizenFX
-cd ~/fivem/code
+cd $ROOT_REPO/code
 
 premake5 gmake2 --game=server --cc=clang --dotnet=msnet
 cd build/server/linux
