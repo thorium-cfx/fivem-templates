@@ -88,7 +88,7 @@ jobs:
       - name: Checkout
         run: |
           # Windows: D is too small, C is big enough
-          [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="$PWD"
+          [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="~/b"
           ROOT_REPO="$ROOT/$PROGRAM"
           ROOT_DEP="$ROOT/dep"
           JOB_SLOTS=$(nproc --all); JOB_SLOTS=$((JOB_SLOTS * 2))
