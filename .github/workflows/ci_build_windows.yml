@@ -16,7 +16,7 @@ env:
 jobs:
   build_windows:
     name: Windows
-    if: inputs.os == "windows"
+    if: inputs.os == 'windows'
     runs-on: windows-latest
     steps:
       - name: Build
@@ -54,7 +54,7 @@ jobs:
         
   build_linux:
     name: Linux
-    if: inputs.os == "linux"
+    if: inputs.os == 'linux'
     runs-on: ubuntu-latest
     steps:
       - name: Build
