@@ -65,11 +65,11 @@ jobs:
     strategy:
       matrix:
         title: [ FiveM, RedM, Server ]
-        product: [ five, rdr3, server ]
+        program: [ five, rdr3, server ]
     uses: ./.github/workflows/ci_build_windows.yml
     with:
       title: ${{ matrix.title }}
-      product: ${{ matrix.product }}
+      program: ${{ matrix.program }}
       
   build_linux_server:
     name: Build / Server (Linux)
