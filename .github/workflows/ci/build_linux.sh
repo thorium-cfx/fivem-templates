@@ -105,7 +105,7 @@ lua5.3 codegen.lua inp/natives_global.lua rpc server > ~/natives/cfx-server/citi
 # download and build premake
 curl --http1.1 -sLo $ROOT_DEP/premake.zip https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-src.zip
 
-cd /tmp
+cd $ROOT_DEP
 unzip -q premake.zip
 rm premake.zip
 cd premake-*
