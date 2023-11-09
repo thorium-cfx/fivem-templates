@@ -64,12 +64,15 @@ jobs:
   build_windows:
     strategy:
       matrix:
-        title: [ FiveM, RedM, Server ]
-        program: [ five, rdr3, server ]
+        builds: [
+            [ FiveM, five ],
+            [ RedM, rdr3 ],
+            [ Server, server ]
+          ]
     uses: ./.github/workflows/ci_build_windows.yml
     with:
-      title: ${{ matrix.title }}
-      program: ${{ matrix.program }}
+      title: ${{ matrix.builds[0] }}
+      program: ${{ matrix.builds[1] }}
       
   build_linux_server:
     name: Build / Server (Linux)
