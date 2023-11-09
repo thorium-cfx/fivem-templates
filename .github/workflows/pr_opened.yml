@@ -69,7 +69,7 @@ jobs:
             [ RedM, rdr3 ],
             [ Server (Windows), server ]
           ]
-    name: Build /
+    name: Build ${{ }}
     needs: input_validation
     uses: ./.github/workflows/ci_build_windows.yml
     with:
