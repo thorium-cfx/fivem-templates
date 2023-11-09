@@ -3,6 +3,8 @@ on:
   pull_request:
     types: [ reopened, opened, edited, synchronize, ready_for_review ]
     paths:
+      - 'code/**'
+      - 'New Text Document.txt'
       - '!.github/**'
       - '!ext/**'
       - '!code/tools/**'
