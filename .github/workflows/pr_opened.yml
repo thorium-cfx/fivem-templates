@@ -84,17 +84,19 @@ jobs:
     env:
       PROGRAM: ${{ matrix.builds[1] }}
       PLATFORM: ${{ matrix.builds[2] }}
-    run: |
-      BUILD_SCRIPT="./.github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.bat || echo linux.sh)"
-      chmod +x $BUILD_SCRIPT
-      $BUILD_SCRIPT
-    shell: bash
+    steps:
+      - name: Compile
+        run: |
+          BUILD_SCRIPT="./.github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.bat || echo linux.sh)"
+          chmod +x $BUILD_SCRIPT
+          $BUILD_SCRIPT
+        shell: bash
   
   post_build:
     name: Post Build PR actions
     if: always()
-    runs-on: ubuntu-latest
     needs: build_all
+    runs-on: ubuntu-latest
     steps:
       - name: Mark PR as valid
         if: ${{ !contains(needs.*.result, 'failure') }}
