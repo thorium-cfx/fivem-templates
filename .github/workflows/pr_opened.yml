@@ -80,10 +80,15 @@ jobs:
           ]
     name: Build / ${{ matrix.builds[0] }}
     needs: input_validation
-    uses: ./.github/workflows/ci_build.yml
-    with:
-      program: ${{ matrix.builds[1] }}
-      platform: ${{ matrix.builds[2] }}
+    runs-on: ${{ matrix.builds[2] == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
+    env:
+      PROGRAM: ${{ matrix.builds[1] }}
+      PLATFORM: ${{ matrix.builds[2] }}
+    run: |
+      BUILD_SCRIPT="./.github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.bat || echo linux.sh)"
+      chmod +x $BUILD_SCRIPT
+      $BUILD_SCRIPT
+    shell: bash
   
   post_build:
     name: Post Build PR actions
