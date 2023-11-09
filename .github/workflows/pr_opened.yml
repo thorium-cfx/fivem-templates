@@ -79,7 +79,7 @@ jobs:
             [ Server, server, Linux ]
           ]
     name: Build / ${{ matrix.builds[0] }}
-    needs: input_validation
+    #needs: input_validation
     runs-on: ${{ matrix.builds[2] == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
     env:
       PROGRAM: ${{ matrix.builds[1] }}
@@ -95,7 +95,7 @@ jobs:
           
           mkdir -p "$ROOT" && cd "$_" || exit 1
           
-          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git "$ROOT_REPO" -c core.symlinks=true
+          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git $PROGRAM -c core.symlinks=true
           git submodule update --jobs=$JOB_SLOTS --init --depth=1
         shell: bash
         
