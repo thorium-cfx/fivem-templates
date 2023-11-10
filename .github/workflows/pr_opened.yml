@@ -101,6 +101,7 @@ jobs:
           echo "JOB_SLOTS=$JOB_SLOTS" >> "$GITHUB_ENV"
           
           # Checkout all repos
+          echo "$ROOT_REPO"
           mkdir -p "$ROOT_REPO" && cd "$_" || exit 1
           git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git . -c core.symlinks=true
           git submodule update --jobs=$JOB_SLOTS --init --depth=1
@@ -108,7 +109,6 @@ jobs:
       - name: Dependencies
         shell: bash
         run: |
-          echo "$ROOT_DEP"
           mkdir -p "$ROOT_DEP" && cd "$_" || exit 1
           
           echo Downloading boost
