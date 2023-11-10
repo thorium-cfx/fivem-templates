@@ -92,7 +92,8 @@ jobs:
           [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="~/b"
           ROOT_REPO="$ROOT/$PROGRAM"
           ROOT_DEP="$ROOT/dep"
-          JOB_SLOTS=$(nproc --all); JOB_SLOTS=$((JOB_SLOTS * 2))
+          JOB_SLOTS=$(nproc --all);
+          #JOB_SLOTS=$((JOB_SLOTS * 2)) # can cause heap allocation issues on Windows
           
           # Share with other steps
           echo "ROOT_REPO=$ROOT_REPO" >> "$GITHUB_ENV"
