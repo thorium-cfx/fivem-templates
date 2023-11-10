@@ -76,7 +76,7 @@ jobs:
           - [ FiveM,  five,   Windows ]
           - [ RedM,   rdr3,   Windows ]
           - [ Server, server, Windows ]
-          #- [ Server, server, Linux ]
+          - [ Server, server, Linux   ]
     name: Build / ${{ matrix.builds[0] }}
     #needs: input_validation
     runs-on: ${{ matrix.builds[2] == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
