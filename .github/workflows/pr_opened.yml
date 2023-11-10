@@ -108,6 +108,7 @@ jobs:
       - name: Dependencies
         shell: bash
         run: |
+          echo "$ROOT_DEP"
           mkdir -p "$ROOT_DEP" && cd "$_" || exit 1
           
           echo Downloading boost
