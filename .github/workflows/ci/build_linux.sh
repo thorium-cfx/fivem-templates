@@ -18,6 +18,8 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libcurl.so /usr/lib/libcurl.so
 python3 -m venv $ROOT_DEP/py-venv
 . $ROOT_DEP/py-venv/bin/activate
 
+pip install ply six Jinja2 MarkupSafe
+
 # build natives
 cd $ROOT_REPO/ext/natives
 gcc -O2 -shared -fpic -o cfx.so -I/usr/include/lua5.3/ lua_cfx.c
