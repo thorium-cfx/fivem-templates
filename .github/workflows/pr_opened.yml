@@ -119,8 +119,9 @@ jobs:
         shell: bash
         run: |
           cd "$ROOT_REPO"
-          echo "$PWD"
           
+          # messes with current build tools, so clear it
+          PLATFORM=
           BUILD_SCRIPT=".github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.cmd || echo linux.sh)"
           
           chmod +x "$BUILD_SCRIPT"
