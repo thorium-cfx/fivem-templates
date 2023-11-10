@@ -89,7 +89,7 @@ jobs:
         run: |
           # Settings
           #  - Windows: D is too small, C is big enough, checkout action doesn't allow this.
-          [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="~/b"
+          [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT="~user/b"
           ROOT_REPO="$ROOT/$PROGRAM"
           ROOT_DEP="$ROOT/dep"
           JOB_SLOTS=$(nproc --all);
