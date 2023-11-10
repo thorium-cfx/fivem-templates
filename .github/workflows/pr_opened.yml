@@ -114,7 +114,6 @@ jobs:
           7z -bso0 x boost.7z -oboost
           rm boost.7z
           echo "BOOST_ROOT=$PWD\boost\boost_1_71_0" >> "$GITHUB_ENV"
-          cd ../
         
       - name: Compile
         shell: bash
@@ -122,7 +121,7 @@ jobs:
           cd "$ROOT_REPO"
           echo "$PWD"
           
-          BUILD_SCRIPT=".github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.bat || echo linux.sh)"
+          BUILD_SCRIPT=".github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.cmd || echo linux.sh)"
           
           chmod +x "$BUILD_SCRIPT"
           $BUILD_SCRIPT "$ROOT_DEP" $JOB_SLOTS
