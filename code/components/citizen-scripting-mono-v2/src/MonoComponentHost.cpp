@@ -48,6 +48,8 @@ void MonoComponentHost::Initialize()
 
 	Method::AddInternalCall("CitizenFX.Core.ScriptInterface::CFree", free);
 	Method::AddInternalCall("CitizenFX.Core.ScriptInterface::Print", MonoComponentHost::Print);
+	
+	FailCompilation!
 
 	//Method::AddInternalCall("CitizenFX.Core.ScriptInterface::GetMemoryUsage", MonoComponentHost::GetMemoryUsage);
 	//Method::AddInternalCall("CitizenFX.Core.ScriptInterface::WalkStackBoundary", MonoComponentHostShared::WalkStackBoundary);
