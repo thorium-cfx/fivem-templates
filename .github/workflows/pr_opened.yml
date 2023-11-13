@@ -70,63 +70,8 @@ jobs:
           fi
   
   build_all:
-    strategy:
-      matrix:
-        builds:
-          - [ FiveM,  five,   Windows ]
-          - [ RedM,   rdr3,   Windows ]
-          - [ Server, server, Windows ]
-          - [ Server, server, Linux   ]
-    name: Build / ${{ matrix.builds[0] }}
-    #needs: input_validation
-    runs-on: ${{ matrix.builds[2] == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
-    env:
-      PROGRAM: ${{ matrix.builds[1] }}
-      PLATFORM: ${{ matrix.builds[2] }}      
-    steps:
-      - name: Checkout
-        shell: bash
-        run: |
-          # Settings
-          #  - Windows: D is too small, C is big enough, checkout action doesn't allow this.
-          [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT=~/b
-          ROOT_REPO="$ROOT/$PROGRAM"
-          ROOT_DEP="$ROOT/dep"
-          JOB_SLOTS=$(nproc --all);
-          #JOB_SLOTS=$((JOB_SLOTS * 2)) # can cause heap allocation issues on Windows
-          
-          # Share with other steps
-          echo "ROOT_REPO=$ROOT_REPO" >> "$GITHUB_ENV"
-          echo "ROOT_DEP=$ROOT_DEP" >> "$GITHUB_ENV"
-          echo "JOB_SLOTS=$JOB_SLOTS" >> "$GITHUB_ENV"
-          
-          # Checkout all repos
-          mkdir -p $ROOT_REPO && cd "$_" || exit 1
-          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git . -c core.symlinks=true
-          git submodule update --jobs=$JOB_SLOTS --init --depth=1
-        
-      - name: Dependencies
-        shell: bash
-        run: |
-          mkdir -p "$ROOT_DEP" && cd "$_" || exit 1
-          
-          echo Downloading boost
-          curl -s -L https://boostorg.jfrog.io/artifactory/main/release/1.71.0/source/boost_1_71_0.7z -o boost.7z
-          7z -bso0 x boost.7z -oboost
-          rm boost.7z
-          echo "BOOST_ROOT=$PWD\boost\boost_1_71_0" >> "$GITHUB_ENV"
-        
-      - name: Compile
-        shell: bash
-        run: |
-          cd "$ROOT_REPO"
-          
-          # messes with current build tools, so clear it
-          BUILD_SCRIPT=".github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.cmd || echo linux.sh)"
-          PLATFORM=
-          
-          chmod +x "$BUILD_SCRIPT"
-          $BUILD_SCRIPT "$ROOT_DEP" $JOB_SLOTS
+    name: Build
+    uses: ./.github/workflows/ci_build.yml@main
   
   post_build:
     name: Post Build PR actions
