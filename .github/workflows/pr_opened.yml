@@ -47,8 +47,8 @@ jobs:
           # get commits json and make an array of commit messages
           readarray -t commitMessages < <(curl -ks "$COMMITS_URL" | jq '.[].commit.message' )
           
-          # requires at least 10 characters in description
-          commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9\/-]+\): .{10,}"
+          # requires at least 8 characters in description
+          commitTitleRegex="^(tweak|fix|feat)\([a-zA-Z0-9\/-]+\): .{8,}"
           valid=true
           
           for (( i=0; i < ${#commitMessages[@]}; i++ )); do
@@ -66,6 +66,17 @@ jobs:
           
           if [[ $valid = false ]]; then
             echo "::error::One or more of your commit titles do not conform to our title rules"
+            echo 
+            echo "Titles need to:
+            echo "- Start with: fix, tweak, or feat,
+            echo "- Within parenthesis contain the area the change is applying,
+            echo "- Colon + space, i.e: ": ",
+            echo "- Description longer than 8 characters".
+            echo 
+            echo "Examples of correct commit titles:"
+            echo "- fix(clrcore): something I fixed"
+            echo "- feat(scripting/lua): new feature for lua"
+            echo "- tweak(scripting/v8): some tweaks"
             exit 1
           fi
   
