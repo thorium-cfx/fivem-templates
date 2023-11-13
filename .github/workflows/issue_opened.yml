@@ -46,12 +46,12 @@ jobs:
               
               const issueBody = process.env.ISSUE_BODY;
               
-              const productsStringRegex = /### Area\(s\)\s*(.*)/;
+              const areasStringRegex = /### Area\(s\)\s*(.*)/;
               
-              var productsString = productsStringRegex.exec(issueBody);
-              if (productsString)
+              var areasString = areasStringRegex.exec(issueBody);
+              if (areasString)
               {
-                var products = productsString[1].split(/, ?/);
+                var products = areasString[1].split(/, ?/);
                 for (var i = 0; i < products.length; ++i)
                 {
                   const product = products[i];
@@ -69,5 +69,16 @@ jobs:
                   ...issue,
                   labels: addLabels
                 });
+              }
+              
+              const priorityStringRegex = /### Importancy\s*(.*)/;
+              
+              var priorityString = priorityStringRegex.exec(issueBody);
+              if (priorityString)
+              {
+                switch (priorityString[1])
+                {
+                  case "Crash": addLabels.push("crash"); break;
+                }
               }
             }
