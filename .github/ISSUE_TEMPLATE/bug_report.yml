@@ -11,8 +11,6 @@ body:
         Thank you for taking the time to fill out this bug report.
         Only bug related issues are accepted, so please refrain yourself from submitting any other requests, including support requests.
         
-        For crashes that terminate the client or server use the [Crash Report](./new?assignees=&labels=crash%2Ctriage&projects=&template=crash_report.yml) template.
-        
         \* Issue reports that fail to deliver the proper information may be closed without any feedback.
   
   - type: textarea
@@ -59,22 +57,30 @@ body:
         - Slight inconvenience
         - There's a workaround
         - Security issue
-        - 
+        - Crash
     validations:
       required: true
   
   - type: dropdown
-    id: products
+    id: areas
     attributes:
-      label: Product(s)
+      label: Area(s)
       multiple: true
       description: |
-        What products does this issue apply to?
+        Which of the following areas does this issue apply to? Please mark all that apply.
       options:
         - FiveM
         - RedM
         - FXServer
         - FxDK
+        - 'Core'
+        - 'OneSync'
+        - 'Natives'
+        - 'ScRT: Lua'
+        - 'ScRT: C#'
+        - 'ScRT: Javascript'
+        - 'Game: GTAV'
+        - 'Game: RDR2'
     validations:
       required: true
   

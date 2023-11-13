@@ -13,7 +13,6 @@ jobs:
           - [ Server, server, Windows ]
           - [ Server, server, Linux   ]
     name: ${{ matrix.builds[0] }}${{ matrix.builds[2] == 'Linux' && ' (Linux)' || '' }}
-    #needs: input_validation
     runs-on: ${{ matrix.builds[2] == 'Windows' && 'windows-latest' || 'ubuntu-20.04' }}
     env:
       PROGRAM: ${{ matrix.builds[1] }}

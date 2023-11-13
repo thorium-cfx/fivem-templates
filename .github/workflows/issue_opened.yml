@@ -46,18 +46,22 @@ jobs:
               
               const issueBody = process.env.ISSUE_BODY;
               
-              const productsStringRegex = /### Product\(s\)\s*([\w, ]*)/;
+              const productsStringRegex = /### Area\(s\)\s*(.*)/;
               
               var productsString = productsStringRegex.exec(issueBody);
               if (productsString)
               {
-                var products = productsString[1].split(/[ ,]+/);              
+                var products = productsString[1].split(/, ?/);
                 for (var i = 0; i < products.length; ++i)
                 {
                   const product = products[i];
                   switch (product)
                   {
                     case "FxDK": addLabels.push("sdk"); break;
+                    case "RedM": addLabels.push("RedM"); break;
+                    case "ScRT: Lua": addLabels.push("ScRT: Lua"); break;
+                    case "ScRT: C#": addLabels.push("ScRT: C#"); break;
+                    case "ScRT: JS": addLabels.push("ScRT: JS"); break;
                   }
                 }
                 
