@@ -36,7 +36,14 @@ jobs:
           
           # Checkout all repos
           mkdir -p "$ROOT_REPO" && cd "$_" || exit 1
-          git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git . -c core.symlinks=true
+          
+          #git clone --depth=1 --shallow-submodules https://github.com/thorium-cfx/fivem-templates.git . -c core.symlinks=true
+          
+          git init .
+          git config core.symlinks true
+          git remote add origin https://github.com/$GITHUB_REPOSITORY.git
+          git fetch $GITHUB_REF:PR_BRANCH --depth=1
+          git checkout PR_BRANCH
           git submodule update --jobs=$JOB_SLOTS --init --depth=1
         
       - name: Dependencies
