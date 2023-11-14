@@ -21,6 +21,7 @@ jobs:
       - name: Checkout
         shell: bash
         run: |
+          
           # Settings
           #  - Windows: D is too small, C is big enough, checkout action doesn't allow this.
           [[ $PLATFORM = Windows ]] && ROOT="C:\b" || ROOT=~/b
@@ -61,7 +62,7 @@ jobs:
           cd "$ROOT_REPO"
           
           # messes with current build tools, so clear it
-          BUILD_SCRIPT=".github/workflows/ci/build_$([[ $PLATFORM = Windows ]] && echo windows.cmd || echo linux.sh)"
+          BUILD_SCRIPT=".github/workflows/ci/build_$PLATFORM.sh"
           PLATFORM=
           
           chmod +x "$BUILD_SCRIPT"
