@@ -36,18 +36,6 @@ jobs:
         run: |
           valid=true
           
-          echo $GITHUB_BASE_REF
-          echo $GITHUB_HEAD_REF
-          echo $GITHUB_REF
-          echo $GITHUB_REF_NAME
-          echo $GITHUB_REF_TYPE
-          echo $GITHUB_REPOSITORY
-          echo $GITHUB_SHA
-          echo $PR_HEAD_SHA
-          echo $PR_BASE_SHA
-          echo 
-          echo $PR_GITHUB_CONTEXT
-          
           if [[ ${#PR_TITLE} -lt 10 ]]; then
             echo "::error::PR title is too small to convey any real meaning."
             valid=false
