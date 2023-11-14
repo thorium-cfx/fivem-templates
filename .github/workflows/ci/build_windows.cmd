@@ -13,6 +13,6 @@ IF %MSBUILD_ERROR% EQU 0 (
 	echo Successfully build %PROGRAM%
 ) else (
 	echo Failed to build %PROGRAM%, MSBuild returned with error code: %MSBUILD_ERROR%
-	for /F "tokens=*" %%A in (myfile.txt) do echo "::error::%%A"
+	for /F "tokens=*" %A in (errors.txt) do @echo "::error::%A"
 	exit /b %MSBUILD_ERROR%
 )
