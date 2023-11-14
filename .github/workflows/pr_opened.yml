@@ -28,6 +28,9 @@ jobs:
       COMMITS_URL: ${{ github.event.pull_request.commits_url }}
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_DESCR: ${{ github.event.pull_request.body }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      PR_GITHUB_CONTEXT: ${{ toJSON(github) }}
     steps:
       - name: Check PR details
         run: |
@@ -40,6 +43,10 @@ jobs:
           echo $GITHUB_REF_TYPE
           echo $GITHUB_REPOSITORY
           echo $GITHUB_SHA
+          echo $PR_HEAD_SHA
+          echo $PR_BASE_SHA
+          echo 
+          echo $PR_GITHUB_CONTEXT
           
           if [[ ${#PR_TITLE} -lt 10 ]]; then
             echo "::error::PR title is too small to convey any real meaning."
