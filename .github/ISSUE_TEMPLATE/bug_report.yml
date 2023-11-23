@@ -9,7 +9,7 @@ body:
     attributes:
       value: |
         Thank you for taking the time to fill out this bug report.
-        Only bug related issues are accepted, so please refrain yourself from submitting any other requests, including support requests.
+        Only bug related issues are accepted, so please refrain from submitting any other requests (including support requests).
         
         \* Issue reports that fail to deliver the proper information may be closed without any feedback.
   
@@ -85,7 +85,7 @@ body:
     id: build-number
     attributes:
       label: Specific version(s)
-      description: Please fill in the build numbers of the products this issue occured on
+      description: Please fill in the build numbers of the product(s) this issue occured on
       placeholder: FiveM/RedM 6464, Server 6402 windows/linux
     validations:
       required: true
