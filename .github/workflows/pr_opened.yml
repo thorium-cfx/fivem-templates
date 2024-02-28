@@ -23,8 +23,8 @@ jobs:
     outputs:
       requires_compilation: ${{ steps.check_changed_files.outputs.requires_compilation }}
     steps:
-      - name: Check PR's changed files
-        id: check_changed_files
+      - id: check_changed_files
+        name: Check PR's changed files
         run: |
           # Include or exclude files, no greedy matching so use [^.]* to go up to the first dot '.'
           filterFiles=(
@@ -45,13 +45,15 @@ jobs:
           
           shouldCompile=false
           
+          for path in ${changedFiles[@]}; do
+              echo $path
+          done
+          
           # file path matching
           for path in ${changedFiles[@]}; do
               # remove first and last " (quotes)
               path=${path:1:-1}
               exclude=0
-              
-              echo $path
               
               for regex in ${filterFiles[@]}; do
                   if [[ ${regex:0:1} = '!' ]]; then
@@ -171,6 +173,11 @@ jobs:
               });
             }
   
+  build_all:
+    name: Build?
+    needs: input_validation
+    run: echo ${{ needs.input_validation.outputs.requires_compilation }}
+    
   build_all:
     name: Build
     needs: input_validation
