@@ -56,7 +56,7 @@ jobs:
           #echo "{name}={value}" >> "$GITHUB_OUTPUT"
           echo Commits: ${{ github.event.pull_request.commits }}
           URL_FILES=${{ github.event.pull_request.url }}/files
-          readarray -t changedFiles < <(curl -ks "$COMMITS_URL" | jq '.[].filename')
+          readarray -t changedFiles < <(curl -ks "$URL_FILES" | jq '.[].filename')
           printf '%s\n' "${changedFiles[@]}"
       
       - name: Check commit titles
