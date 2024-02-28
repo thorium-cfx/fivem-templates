@@ -32,7 +32,7 @@ jobs:
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
       PR_GITHUB_CONTEXT: ${{ toJSON(github) }}
-      GH_TOKEN: ${{ github.token }}
+      EVENT_DATA: ${{ github.token }}
     steps:
       - name: Check PR details
         run: |
@@ -55,7 +55,7 @@ jobs:
           # check changed files
           #echo "{name}={value}" >> "$GITHUB_OUTPUT"
           echo Commits: ${{ github.event.pull_request.commits }}
-          echo ${{ toJson(github.event.pull_request) }}
+          echo $PR_GITHUB_CONTEXT
           echo $COMMITS_URL
       
       - name: Check commit titles
