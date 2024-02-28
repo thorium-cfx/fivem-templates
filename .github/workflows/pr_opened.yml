@@ -27,6 +27,7 @@ jobs:
         name: Check PR's changed files
         run: |
           # Include or exclude files, no greedy matching so use [^.]* to go up to the first dot '.'
+          # Later inclusions override previous exclusions, following same logic as GitHub's paths checking
           filterFiles=(
                 '^code/*'
                 '!^.github/*'
@@ -74,7 +75,6 @@ jobs:
               fi
           done
           
-          echo "requires_compilation=$shouldCompile"
           echo "requires_compilation=$shouldCompile" >> "$GITHUB_OUTPUT"
       
       - name: Check PR details
@@ -173,14 +173,6 @@ jobs:
               });
             }
   
-  build_all2:
-    name: Build?
-    needs: input_validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo
-        run: echo ${{ needs.input_validation.outputs.requires_compilation }}
-    
   build_all:
     name: Build
     needs: input_validation
