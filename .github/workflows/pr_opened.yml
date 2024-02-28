@@ -173,10 +173,13 @@ jobs:
               });
             }
   
-  build_all:
+  build_all2:
     name: Build?
     needs: input_validation
-    run: echo ${{ needs.input_validation.outputs.requires_compilation }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: echo ${{ needs.input_validation.outputs.requires_compilation }}
     
   build_all:
     name: Build
