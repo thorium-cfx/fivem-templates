@@ -70,7 +70,7 @@ jobs:
               fi
           done
           
-         #echo "requires_compilation={shouldCompile}" >> "$GITHUB_OUTPUT"
+          echo "requires_compilation={shouldCompile}" >> "$GITHUB_OUTPUT"
       
       - name: Check PR details
         run: |          
