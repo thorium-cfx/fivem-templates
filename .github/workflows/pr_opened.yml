@@ -71,8 +71,7 @@ jobs:
           done
           
          #echo "requires_compilation={shouldCompile}" >> "$GITHUB_OUTPUT"
-        
-    steps:
+      
       - name: Check PR details
         run: |          
           valid=true
