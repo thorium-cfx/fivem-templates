@@ -55,6 +55,7 @@ jobs:
           # check changed files
           #echo "{name}={value}" >> "$GITHUB_OUTPUT"
           echo Commits: ${{ github.event.pull_request.commits }}
+          echo $COMMITS_URL
           echo $(gh pr view 2615 --json files --jq '.files.[].path')
       
       - name: Check commit titles
