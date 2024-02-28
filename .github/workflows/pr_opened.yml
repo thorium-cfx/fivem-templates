@@ -23,8 +23,8 @@ jobs:
     outputs:
       requires_compilation: ${{ steps.check_changed_files.outputs.requires_compilation }}
     steps:
-      - id: check_changed_files
-        name: Check PR's changed files
+      - name: Check PR's changed files
+        id: check_changed_files
         run: |
           # Include or exclude files, no greedy matching so use [^.]* to go up to the first dot '.'
           # Later inclusions override previous exclusions, following same logic as GitHub's paths checking
