@@ -136,7 +136,6 @@ jobs:
   build_all:
     name: Build
     needs: input_validation
-#    uses: ./.github/workflows/ci_build.yml
      run: echo hi
   
   post_build:
