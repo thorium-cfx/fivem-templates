@@ -45,14 +45,14 @@ jobs:
           
           shouldCompile=false
           
-          for path in ${changedFiles[@]}; do
-              echo $path
+          for (( i=0; i < ${#changedFiles[@]}; i++ )); do
+              echo ${changedFiles[$i]}
           done
           
           # file path matching
-          for path in ${changedFiles[@]}; do
+          for (( i=0; i < ${#changedFiles[@]}; i++ )); do
               # remove first and last " (quotes)
-              path=${path:1:-1}
+              path=${changedFiles[$i]:1:-1}
               exclude=0
               
               for regex in ${filterFiles[@]}; do
@@ -184,7 +184,7 @@ jobs:
   build_all:
     name: Build
     needs: input_validation
-    if: ${{ needs.input_validation.outputs.requires_compilation == true }}
+    if: ${{ needs.input_validation.outputs.requires_compilation == 'true' }}
     uses: ./.github/workflows/ci_build.yml
   
   post_build:
