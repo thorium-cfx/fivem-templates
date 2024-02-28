@@ -54,7 +54,8 @@ jobs:
           
           # check changed files
           #echo "{name}={value}" >> "$GITHUB_OUTPUT"
-          echo $(gh pr view '${{ github.event.pull_request.number || github.event.issue.number }}' --json headRefOid --jq '.headRefOid' --repo ${{ github.repository }})
+          echo Commits: ${{ github.event.pull_request.commits }}
+          echo $(gh pr view 2615 --json files --jq '.files.[].path')
       
       - name: Check commit titles
         run: |
