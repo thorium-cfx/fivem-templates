@@ -55,7 +55,7 @@ jobs:
           # check changed files
           #echo "{name}={value}" >> "$GITHUB_OUTPUT"
           echo Commits: ${{ github.event.pull_request.commits }}
-          echo Commits: ${{ github.event.pull_request.diff_url }}
+          echo ${{ toJson(github.event.pull_request) }}
           echo $COMMITS_URL
       
       - name: Check commit titles
