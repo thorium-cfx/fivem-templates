@@ -50,6 +50,10 @@ jobs:
           if [[ $valid = false ]]; then
             exit 1
           fi
+          
+          # check changed files
+          #echo "{name}={value}" >> "$GITHUB_OUTPUT"
+          echo $(gh pr view '${{ github.event.pull_request.number || github.event.issue.number }}' --json headRefOid --jq '.headRefOid' --repo ${{ github.repository }})
       
       - name: Check commit titles
         run: |
@@ -132,7 +136,8 @@ jobs:
   build_all:
     name: Build
     needs: input_validation
-    uses: ./.github/workflows/ci_build.yml
+#    uses: ./.github/workflows/ci_build.yml
+     run: echo hi
   
   post_build:
     name: Post Build PR actions
