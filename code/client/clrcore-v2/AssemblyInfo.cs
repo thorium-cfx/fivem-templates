@@ -29,4 +29,5 @@ using System.Security;
 [assembly: AssemblyDescription("CitizenFX.Core for LibertyM")]
 [assembly: InternalsVisibleTo("CitizenFX.LibertyM")]
 [assembly: InternalsVisibleTo("CitizenFX.LibertyM.NativeImpl")]
+[assembly: InternalsVisibleTo("CitizenFX.LibertyM.NativeImpl")]
 #endif
