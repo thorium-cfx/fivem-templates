@@ -182,7 +182,7 @@ jobs:
   post_build:
     name: Post Build PR actions
     if: always()
-    needs: build_all
+    needs: [ build_all, input_validation ]
     runs-on: ubuntu-latest
     steps:
       - name: Mark PR as valid
